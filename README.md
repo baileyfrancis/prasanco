@@ -1,2 +1,3 @@
-# prasanco
-PrAsAnCo (Prokaryotic Assembly Annotation and Comparison) is a complete toolkit designed specifically for prokaryotic genome assembly, annotation and comparison for two input datasets. PrAsAnCo uses both short-read Illumina data and long-read Oxford Nanopore data to generate a polished assembly for both input samples. 
+# PRASANCO (Prokaryotic Assembly Annotation and Comparison Tool)
+PrAsAnCo (**Pr**okaryotic **As**sembly **An**notation and **Co**mparison Tool) is a pipeline designed specifically for prokaryotic genome assembly, annotation and comparison of two input datasets. PrAsAnCo uses both short-read Illumina data and long-read Oxford Nanopore data to generate a polished assembly for both input samples using Trycycler. The quality and completeness of each assembly is then assessed using QUAST and BUSCO. Annotation of both assemblies is achieved using PROKKA. Finally, PrAsAnCo creates human readable comparison tables for the quality, completeness and annotations between the two assemblies. 
+
