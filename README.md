@@ -13,3 +13,27 @@ conda env create --name prasanco_py2 --file ./conda/prasanco_py2.yml
 ```
 
 Due to PrAsAnCo using two different Conda environments, please ensure you provide PrAsAnCo with the path to your conda/miniconda directory using `prasanco --conda [path]`. This allows PrAsAnCo to activate each of its Conda environments when they are needed. 
+
+### Third-party tools 
+To function properly, PrAsAnCo depends on some third-party tools to carry out particular tasks. These third-party tools must be installed before you use PrAsAnCo. Installation instructions for each of the required tools can be found below: 
+
+#### Filtlong
+[Filtlong](https://github.com/rrwick/Filtlong#installation) is a tool that PrAsAnCo uses to quality check the long-read Oxford Nanopore data as part of its Trycycler hybrid assembly. To install Filtlong, use the commands down below 
+
+```
+cd prasanco (if you are not already in the prasanco directory) 
+cd tools 
+git clone https://github.com/rrwick/Filtlong.git
+cd Filtlong
+make -j
+```
+To ensure the Filtlong executable works correctly ****please copy it to a directory in your PATH****:
+
+For example:
+
+`cp bin/filtlong /usr/local/bin`
+
+OR
+
+`cp bin/filtlong [path to your prasanco_py3 Conda environment]/bin` 
+
