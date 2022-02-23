@@ -60,3 +60,10 @@ Inside this directory you will find various ouputs:
 * **[label2]_trycycler/** = trycycler output directory containing contigs for your second sample
 
 ***Please ensure you have all outputs before moving on to Step 2***
+
+### Checking your clusters 
+At this stage, you need to have a look at your clusters of contigs and assess how good they are. You can do this by viewing the phylogenetic tree of your clusters (produced by Trycycler) - this can be found in the `trycycler` directories for your samples in the `contigs.newick` file. 
+
+In short, good clusters contain many contigs that are closely related to eachother, wheras a bad cluster contains few contigs. For full instructions on selecting good contigs see [this page](https://github.com/rrwick/Trycycler/wiki/Clustering-contigs) (under the 'Choose your clusters heading) . If you have any bad clusters, please rename the directory (with the mv command) e.g. `cluster_02` will become `bad_cluster_02`. Again, for further details [refer here](https://github.com/baileyfrancis/prasanco/edit/main/README.md).
+
+***Once you have done this, please move on to Step 2***
