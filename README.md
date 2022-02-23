@@ -3,7 +3,19 @@ PrAsAnCo (**Pr**okaryotic **As**sembly **An**notation and **Co**mparison Tool) i
 
 ## Installation 
 
-### Install PrAsAnCo with Conda 
+### Install PrAsAnCo on your machine 
+To install PrAsAnCo, move into the directory in which you would like PrAsAnCO to be installed and simply enter the commands below in to the command-line:
+
+```
+git clone https://github.com/baileyfrancis/prasanco
+cd prasanco 
+chmod +x ./install.sh 
+./install.sh 
+
+```
+You are now ready to use PrAsAnCo. Before you do, please ensure you have created the required Conda environments as described below.
+
+### Install PrAsAnCo Conda environment  
 Unfortunately, PrAsAnCo cannot be run using a single Conda environment. This is because third-party tools that PrAsAnCo uses require conflicting versions of Python. Therefore, before you run PrAsAnCo, you should create the two PrAsAnCo Conda environments using the commands shown below:
 
 ```
