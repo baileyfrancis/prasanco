@@ -22,6 +22,13 @@ InitialAssembly_parser.add_argument('--threads', metavar='Number of threads', ty
 InitialAssembly_parser.add_argument('--conda', metavar='Path to your Conda/Miniconda environment directory', type=str, help='Please procide the absolute path to your Conda/Miniconda environments directory e.g. /shared/home/mbxbf2/miniconda3/envs', required=True)
 InitialAssembly_parser.add_argument('--out_dir', metavar='Output directory', type=str, help='Output directory for your initial assemblies')
 
+# Create PrAsAnCo reconcile command
+Reconcile_parser = subparsers.add_parser('reconcile', help='Perform the Trycycler reconciliation step for each of your samples')
+Reconcile_parser.add_argument('--clusters1', nargs='*', metavar='Clusters for your first sample', type=str, help='Specify the clusters you wish to reconcile for your first sample. E.g. --clusters1 cluster_001 cluster_002 cluster_003')
+Reconcile_parser.add_argument('--clusters2', nargs='*', metavar='Clusters for your second sample', type=str, help='Specify the clusters you wish to reconcile for your second sample. E.g. --clusters1 cluster_001 cluster_002 cluster_003')
+Reconcile_parser.add_argument('--label1', metavar='Label for your first sample', type=str, help='Please provide the same label for your first sample as you used for Step 1', required=True)
+Reconcile_parser.add_argument('--label2', metavar='Label for your second sample', type=str, help='Please provide the same label for your second sample as you used for Step 1', required=True)
+
 args = parser.parse_args()
 
 #==================================
@@ -85,3 +92,37 @@ if args.command == 'initial_assembly':
 	InitialAssembly_script.close()
 	os.system(f'mv InitialAssembly.sh {args.out_dir}/BatchScripts')
 	os.system(f'sbatch {args.out_dir}/BatchScripts/InitialAssembly.sh')  
+
+#===========================
+# PrAsAnCo reconcile command
+#===========================
+
+if args.command == 'reconcile':
+	ReconcileScript= open('Reconcile.sh', 'w+')
+	ReconcileScript.write('#!/bin/bash\n' +
+		'#SBATCH --job-name=Reconcile\n' +
+		'#SBATCH --nodes=1\n' +
+		'#SBATCH --tasks-per-node=1\n' +
+		'#SBATCH --cpus-per-task=4\n' +
+		'#SBATCH --mem=15g\n' +
+		'#SBATCH --time=48:00:00\n' +
+		f'#SBATCH --output=./BatchScripts/OutErr/%x.out\n' +
+		f'#SBATCH --error=./BatchScripts/OutErr/%x.err\n\n' +
+		'source $HOME/.bash_profile\n' +
+		f'conda activate prasanco_py3\n\n')
+	ReconcileScript.close()
+
+	if type(args.clusters1) is list:
+		for cluster in args.clusters1:
+			AppendClusters1 = open('Reconcile.sh', 'a')
+			AppendClusters1.write(f'trycycler --reads {args.label1} --cluster_dir ./{args.label1}_trycycler/{cluster}\n')
+			AppendClusters1.close()
+
+	if type(args.clusters2) is list:
+		for cluster in args.clusters2:
+			AppendClusters2 = open('Reconcile.sh', 'a')
+			AppendClusters2.write(f'trycycler --reads {args.label2} --cluster_dir ./{args.label2}_trycycler/{cluster}\n')
+			AppendClusters2.close()
+
+	os.system('mv Reconcile.sh ./BatchScripts')
+	os.system('sbatch Reconcile.sh')
