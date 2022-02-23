@@ -59,4 +59,4 @@ if args.command == 'initial_assembly':
 		f'raven --threads {args.threads} {args.out_dir}/read_subsets_1/sample_03.fastq > {args.out_dir}/{args.label1}_assemblies/assembly_03.fasta && rm raven.cereal')
 	InitialAssembly_script.close()
 	os.system(f'mv InitialAssembly.sh {args.out_dir}/BatchScripts')
-	os.system(f'sbatch {args.out_dir}/InitialAssembly.sh') 
+	os.system(f'sbatch {args.out_dir}/BatchScripts/InitialAssembly.sh') 
