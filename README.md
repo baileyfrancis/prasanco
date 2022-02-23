@@ -92,6 +92,7 @@ We can do this with the following command (in your --out_dir:
 
 `python [path to prasanco]/prasanco.py reconcile --label1 Sample1 --label2 Sample2 --clusters1 cluster_01 cluster_02 cluster_03 ... --clusters2 cluster_01 cluster_02 cluster_03 ...`
 
+### Additional reconcile rounds
 After this reconcile round has completed, have a look at the output (found in BatchScripts/OutErr/Reconcile.err).
 At this stage, you will need to decide which contigs to keep and which to discard (if needed). In general, you should remove a contig if it recieves an error message of **'unable to circularise'** or if it creates a large number of indels (both of these can be deduced from the Reconcile.err file). If a contig fufils any of these scenarios, you should navigate to its given cluster directory/1_contigs and rename it like so:
 
