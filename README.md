@@ -85,14 +85,14 @@ Option   | Description
 --clusters1 | Specify the clusters from your first sample you wish to reconicle e.g. --clusters1 cluster_01 cluster_03
 --clusters2 | Specify the clusters from your second sample you wish to reconicle e.g. --clusters1 cluster_01 cluster_03
 
-### First reconcile round 
+#### First reconcile round 
 This reconicilation stage may take multiple rounds to complete correctly and requires you to inspect the output of each round and assess whether you should keep/discard particular contigs. However, for the first round of this stage we want to try and reconcicle all clusters from all samples.
 
 We can do this with the following command (in your --out_dir:
 
 `python [path to prasanco]/prasanco.py reconcile --label1 Sample1 --label2 Sample2 --clusters1 cluster_01 cluster_02 cluster_03 ... --clusters2 cluster_01 cluster_02 cluster_03 ...`
 
-### Additional reconcile rounds
+#### Additional reconcile rounds
 After this reconcile round has completed, have a look at the output (found in BatchScripts/OutErr/Reconcile.err).
 At this stage, you will need to decide which contigs to keep and which to discard (if needed). In general, you should remove a contig if it recieves an error message of **'unable to circularise'** or if it creates a large number of indels (both of these can be deduced from the Reconcile.err file). If a contig fufils any of these scenarios, you should navigate to its given cluster directory/1_contigs and rename it like so:
 
@@ -103,3 +103,24 @@ This will remove the bad contig from the next round of reconciliation. When all 
 You should keep repeating this process of reconcilation, removing bad contigs, reconciliation, removing bad contigs until you have these files. I strongly recommend that you look up this reconciliation step [here](https://github.com/rrwick/Trycycler/wiki/Reconciling-contigs) to familiarise yourself with this process.
 
 Once you have all of yout `2_all_seqs.fasta` files, you can move on to the next step. 
+
+### Step 3 - Multiple Sequence Alignment
+After you have reconciled your contigs, the next stage of the Trycycler assembly is [multiple sequence alignment](https://github.com/rrwick/Trycycler/wiki/Multiple-sequence-alignment) 
+
+#### Command
+
+#### Options 
+
+Option   | Description
+---------|------------
+--label1 | Label for the first sample. **(Please use the same label as you did for Step 1 and 2)**
+--label2 |  Label for the second sample. **(Please use the same label as you did for Step 1 and 2)**
+--clusters1 | Specify the clusters from your first sample you wish to align e.g. --clusters1 cluster_01 cluster_03
+--clusters2 | Specify the clusters from your second sample you wish to align e.g. --clusters1 cluster_01 cluster_03
+
+#### Output 
+If everything has worked correctly, you should have a file named `3_msa.fasta` in each of your cluster directories. 
+
+#### Note:
+If your msa command does not produce the `3_msa.fasta` file for a cluster, remove the next worse contig from the cluster and try this step again (given that you still have a sufficient amount of contigs - you should have atleast 4). 
+
