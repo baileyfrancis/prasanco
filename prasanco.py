@@ -55,8 +55,29 @@ if args.command == 'initial_assembly':
 		f'mkdir {args.out_dir}/{args.label1}_assemblies\n' +
 		f'mkdir {args.out_dir}/{args.label2}_assemblies\n\n' +
 		f'flye --nano-hq {args.out_dir}/read_subsets_1/sample_01.fastq --threads {args.threads} --out-dir assembly_01 && cp assembly01/assembly.fasta {args.out_dir}/{args.label1}_assemblies/assembly_01.fasta && rm -r assembly_01\n' +
-		f'{prasanco_path}/third_party/miniasm_and_minipolish.sh {args.out_dir}/read_subsets_1/sample_02.fastq {args.threads} > assembly_02.gfa && any2fasta assembly_02.gfa > {args.out_dir}/{args.label1}_assemblies/assembly_02.fastra && rm assembly_02.gfa\n' +
-		f'raven --threads {args.threads} {args.out_dir}/read_subsets_1/sample_03.fastq > {args.out_dir}/{args.label1}_assemblies/assembly_03.fasta && rm raven.cereal')
+		f'{prasanco_path}/third_party/miniasm_and_minipolish.sh {args.out_dir}/read_subsets_1/sample_02.fastq {args.threads} > assembly_02.gfa && any2fasta assembly_02.gfa > {args.out_dir}/{args.label1}_assemblies/assembly_02.fasta && rm assembly_02.gfa\n' +
+		f'raven --threads {args.threads} {args.out_dir}/read_subsets_1/sample_03.fastq > {args.out_dir}/{args.label1}_assemblies/assembly_03.fasta && rm raven.cereal\n' +
+		f'flye --nano-hq {args.out_dir}/read_subsets_1/sample_04.fastq --threads {args.threads} --out-dir assembly_04 && cp assembly04/assembly.fasta {args.out_dir}/{args.label1}_assemblies/assembly_04.fasta && rm -r assembly_04\n' +
+		f'{prasanco_path}/third_party/miniasm_and_minipolish.sh {args.out_dir}/read_subsets_1/sample_05.fastq {args.threads} > assembly_05.gfa && any2fasta assembly_05.gfa > {args.out_dir}/{args.label1}_assemblies/assembly_05.fasta && rm assembly_05.gfa\n' +
+		f'raven --threads {args.threads} {args.out_dir}/read_subsets_1/sample_06.fastq > {args.out_dir}/{args.label1}_assemblies/assembly_06.fasta && rm raven.cereal\n' +
+		f'flye --nano-hq {args.out_dir}/read_subsets_1/sample_07.fastq --threads {args.threads} --out-dir assembly_07 && cp assembly07/assembly.fasta {args.out_dir}/{args.label1}_assemblies/assembly_07.fasta && rm -r assembly_07\n' +
+		f'{prasanco_path}/third_party/miniasm_and_minipolish.sh {args.out_dir}/read_subsets_1/sample_08.fastq {args.threads} > assembly_08.gfa && any2fasta assembly_08.gfa > {args.out_dir}/{args.label1}_assemblies/assembly_08.fasta && rm assembly_08.gfa\n' +
+		f'raven --threads {args.threads} {args.out_dir}/read_subsets_1/sample_09.fastq > {args.out_dir}/{args.label1}_assemblies/assembly_09.fasta && rm raven.cereal\n' +
+		f'flye --nano-hq {args.out_dir}/read_subsets_1/sample_10.fastq --threads {args.threads} --out-dir assembly_10 && cp assembly10/assembly.fasta {args.out_dir}/{args.label1}_assemblies/assembly_10.fasta && rm -r assembly_10\n' +
+		f'{prasanco_path}/third_party/miniasm_and_minipolish.sh {args.out_dir}/read_subsets_1/sample_11.fastq {args.threads} > assembly_11.gfa && any2fasta assembly_11.gfa > {args.out_dir}/{args.label1}_assemblies/assembly_11.fasta && rm assembly_11.gfa\n' +
+		f'raven --threads {args.threads} {args.out_dir}/read_subsets_1/sample_12.fastq > {args.out_dir}/{args.label1}_assemblies/assembly_12.fasta && rm raven.cereal\n' +
+		f'flye --nano-hq {args.out_dir}/read_subsets_2/sample_01.fastq --threads {args.threads} --out-dir assembly_01 && cp assembly01/assembly.fasta {args.out_dir}/{args.label2}_assemblies/assembly_01.fasta && rm -r assembly_01\n' +
+		f'{prasanco_path}/third_party/miniasm_and_minipolish.sh {args.out_dir}/read_subsets_2/sample_02.fastq {args.threads} > assembly_02.gfa && any2fasta assembly_02.gfa > {args.out_dir}/{args.label2}_assemblies/assembly_02.fasta && rm assembly_02.gfa\n' +
+		f'raven --threads {args.threads} {args.out_dir}/read_subsets_2/sample_03.fastq > {args.out_dir}/{args.label2}_assemblies/assembly_03.fasta && rm raven.cereal\n' +
+		f'flye --nano-hq {args.out_dir}/read_subsets_2/sample_04.fastq --threads {args.threads} --out-dir assembly_04 && cp assembly04/assembly.fasta {args.out_dir}/{args.label2}_assemblies/assembly_04.fasta && rm -r assembly_04\n' +
+		f'{prasanco_path}/third_party/miniasm_and_minipolish.sh {args.out_dir}/read_subsets_2/sample_05.fastq {args.threads} > assembly_05.gfa && any2fasta assembly_05.gfa > {args.out_dir}/{args.label2}_assemblies/assembly_05.fasta && rm assembly_05.gfa\n' +
+		f'raven --threads {args.threads} {args.out_dir}/read_subsets_2/sample_06.fastq > {args.out_dir}/{args.label2}_assemblies/assembly_06.fasta && rm raven.cereal' +
+		f'flye --nano-hq {args.out_dir}/read_subsets_2/sample_07.fastq --threads {args.threads} --out-dir assembly_07 && cp assembly07/assembly.fasta {args.out_dir}/{args.label2}_assemblies/assembly_07.fasta && rm -r assembly_07\n' +
+		f'{prasanco_path}/third_party/miniasm_and_minipolish.sh {args.out_dir}/read_subsets_2/sample_08.fastq {args.threads} > assembly_08.gfa && any2fasta assembly_08.gfa > {args.out_dir}/{args.label2}_assemblies/assembly_08.fasta && rm assembly_08.gfa\n' +
+		f'raven --threads {args.threads} {args.out_dir}/read_subsets_2/sample_09.fastq > {args.out_dir}/{args.label2}_assemblies/assembly_09.fasta && rm raven.cereal\n' +
+		f'flye --nano-hq {args.out_dir}/read_subsets_2/sample_10.fastq --threads {args.threads} --out-dir assembly_10 && cp assembly10/assembly.fasta {args.out_dir}/{args.label2}_assemblies/assembly_10.fasta && rm -r assembly_10\n' +
+		f'{prasanco_path}/third_party/miniasm_and_minipolish.sh {args.out_dir}/read_subsets_2/sample_11.fastq {args.threads} > assembly_11.gfa && any2fasta assembly_11.gfa > {args.out_dir}/{args.label2}_assemblies/assembly_11.fasta && rm assembly_11.gfa\n' +
+		f'raven --threads {args.threads} {args.out_dir}/read_subsets_2/sample_12.fastq > {args.out_dir}/{args.label2}_assemblies/assembly_12.fasta && rm raven.cereal\n\n')
 	InitialAssembly_script.close()
 	os.system(f'mv InitialAssembly.sh {args.out_dir}/BatchScripts')
 	os.system(f'sbatch {args.out_dir}/BatchScripts/InitialAssembly.sh')  
