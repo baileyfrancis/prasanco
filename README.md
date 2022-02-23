@@ -34,3 +34,12 @@ Option    | Description
 --threads | The number of threads to allocate to this task. **Recommended = 8**
 --conda   | The absolute path to your Conda /envs directory. ***Example*** /shared/home/mbxbf2/miniconda3/envs/
 --out_dir | The name given to the PrAsAnCo output directory. 
+
+### Outputs
+When the `initial_assembly` command is run it will create a new output directory within the current working directory (This new directory will have the name assigned to it by the `--out_dir` option. 
+
+Inside this directory you will find various ouputs: 
+* **BatchScripts** directory = directory containing all scripts PrAsAnCo uses to run. If you wish to look at the SLURM outputs for these scripts, they can be found in BatchScripts/OutErr
+* **[label1]_reads.fastq** = reads for your first sample after filtering by Filtlong
+* **[label2]_reads.fastq** = reads for your second sample after filtering by Filtlong
+* 
