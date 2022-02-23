@@ -54,5 +54,9 @@ Inside this directory you will find various ouputs:
 * **BatchScripts/** directory = directory containing all scripts PrAsAnCo uses to run. If you wish to look at the SLURM outputs for these scripts, they can be found in BatchScripts/OutErr
 * **[label1]_reads.fastq** = reads for your first sample after filtering by Filtlong
 * **[label2]_reads.fastq** = reads for your second sample after filtering by Filtlong
-* **[label1]_assemblies/** directory = directory containing all Flye, Miniasm+Minipolish and Raven assemblies for your first sample
-* **[label2]_assemblies/** directory = directory containing all Flye, Miniasm+Minipolish and Raven assemblies for your second sample
+* **[label1]_assemblies/** directory = directory containing all Flye, Miniasm+Minipolish and Raven assemblies for your first sample. If everything has worked correctly, this directory should contain 12 assemblies labelled assembly_**
+* **[label2]_assemblies/** directory = directory containing all Flye, Miniasm+Minipolish and Raven assemblies for your second sample. If everything has worked correctly, this directory should contain 12 assemblies labelled assembly_**
+* **[label1]_trycycler/** = trycycler output directory containing contigs for your first sample
+* **[label2]_trycycler/** = trycycler output directory containing contigs for your second sample
+
+***Please ensure you have all outputs before moving on to Step 2***
