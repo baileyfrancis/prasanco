@@ -69,11 +69,36 @@ In short, good clusters contain many contigs that are closely related to eachoth
 ***Once you have done this, please move on to Step 2***
 
 ### Step 2 - Reconciliate clusters 
+After you have hand-picked your good clusters, you are ready to reconcile the contigs within them. This step of the pipeline uses the Trycycler reconile command which: checks that contigs are sufficiently similar to eachother, (if applicable) attempts to circularise them and then performs a final alignment to ensure these circular contigs are similar enough for the next step. For further details on Trycycler reconicilation, [visit this page](https://github.com/rrwick/Trycycler/wiki/Reconciling-contigs)
 
 #### Command 
-To run the reconicle step, simply navigate to your **--out_dir** from the previous step and enter the command shown below in to the command line:
+To run the PrAsAnCo reconicle step, simply navigate to your **--out_dir** from the previous step and enter the command shown below in to the command line: (options are described in further detail below)
 
 `python [path to prasanco]/prasanco.py reconcile --label1 x --label2 x --clusters1 x --clusters2 x`
 
 #### Options 
 
+Option   | Description
+---------|------------
+--label1 | Label for the first sample. **(Please use the same label as you did for Step 1)**
+--label2 |  Label for the second sample. **(Please use the same label as you did for Step 1)**
+--clusters1 | Specify the clusters from your first sample you wish to reconicle e.g. --clusters1 cluster_01 cluster_03
+--clusters2 | Specify the clusters from your second sample you wish to reconicle e.g. --clusters1 cluster_01 cluster_03
+
+### First reconcile round 
+This reconicilation stage may take multiple rounds to complete correctly and requires you to inspect the output of each round and assess whether you should keep/discard particular contigs. However, for the first round of this stage we want to try and reconcicle all clusters from all samples.
+
+We can do this with the following command (in your --out_dir:
+
+`python [path to prasanco]/prasanco.py reconcile --label1 Sample1 --label2 Sample2 --clusters1 cluster_01 cluster_02 cluster_03 ... --clusters2 cluster_01 cluster_02 cluster_03 ...`
+
+After this reconcile round has completed, have a look at the output (found in BatchScripts/OutErr/Reconcile.err).
+At this stage, you will need to decide which contigs to keep and which to discard (if needed). In general, you should remove a contig if it recieves an error message of **'unable to circularise'** or if it creates a large number of indels (both of these can be deduced from the Reconcile.err file). If a contig fufils any of these scenarios, you should navigate to its given cluster directory/1_contigs and rename it like so:
+
+`mv A_contig.fasta A_contig.bad` 
+
+This will remove the bad contig from the next round of reconciliation. When all the bad contigs are removed, you should see a file named `2_all_seqs.fasta` in all of your cluster's directories.
+
+You should keep repeating this process of reconcilation, removing bad contigs, reconciliation, removing bad contigs until you have these files. I strongly recommend that you look up this reconciliation step [here](https://github.com/rrwick/Trycycler/wiki/Reconciling-contigs) to familiarise yourself with this process.
+
+Once you have all of yout `2_all_seqs.fasta` files, you can move on to the next step. 
