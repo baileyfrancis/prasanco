@@ -25,4 +25,12 @@ To run the initial assembly step please use the command shown here: (options are
 `[path to prasanco]/prasanco.py initial_assembly --label1 x --label2 x --reads1 x --reads2 x --threads x --conda x --out_dir x` 
 
 #### Options 
-
+Option    | Description
+--------  | -----------
+--label1  | Name given to all files relating to your first sample. ***Example*** --label1 SampleA -> SampleA_reads.fastq (**To avoid confusion, please keep consistent throughout the PrAsAnCo pipeline**)
+--label2  | Name given to all files relating to your second sample. ***Example*** --label2 SampleB -> SampleB_reads.fastq (**To avoid confusion, please keep consistent throughout the PrAsAnCo pipeline**)
+--reads1  | A single file containing Oxford Nanopore long-reads for your first sample.
+--reads2  | A single file containing Oxford Nanopore long-reads for your second sample.
+--threads | The number of threads to allocate to this task. **Recommended = 8**
+--conda   | The absolute path to your Conda /envs directory. ***Example*** /shared/home/mbxbf2/miniconda3/envs/
+--out_dir | The name given to the PrAsAnCo output directory. 
