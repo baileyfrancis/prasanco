@@ -31,7 +31,7 @@ Due to PrAsAnCo using two different Conda environments, please ensure you provid
 ### Step 1 - Initial assembly 
 To assemble your long-read data, PrAsAnCo uses [Trycycler](https://github.com/rrwick/Trycycler). The first step in this Trycycler pipeline is to generate some initial assemblies for your genomes using [Flye](https://github.com/fenderglass/Flye), [Miniasm+Minipolish](https://github.com/rrwick/Minipolish) and [Raven](https://github.com/lbcb-sci/raven). These initial assemblies are then used by Trycycler to cluster your long reads into contigs - you will need these contigs for the next steps.
 
-### Command
+#### Command
 To run the initial assembly step please use the command shown here: (options are described in further detail below)
 
 `[path to prasanco]/prasanco.py initial_assembly --label1 x --label2 x --reads1 x --reads2 x --threads x --conda x --out_dir x` 
@@ -47,7 +47,7 @@ Option    | Description
 --conda   | The absolute path to your Conda /envs directory. ***Example*** /shared/home/mbxbf2/miniconda3/envs/
 --out_dir | The name given to the PrAsAnCo output directory. 
 
-### Outputs
+#### Outputs
 When the `initial_assembly` command is run it will create a new output directory within the current working directory (This new directory will have the name assigned to it by the `--out_dir` option. 
 
 Inside this directory you will find various ouputs: 
@@ -61,9 +61,19 @@ Inside this directory you will find various ouputs:
 
 ***Please ensure you have all outputs before moving on to Step 2***
 
-### Checking your clusters 
+#### Checking your clusters 
 At this stage, you need to have a look at your clusters of contigs and assess how good they are. You can do this by viewing the phylogenetic tree of your clusters (produced by Trycycler) - this can be found in the `trycycler` directories for your samples in the `contigs.newick` file. This file can be viewed using any phylogenetic tree visualisation tool e.g. [Dendroscope](https://uni-tuebingen.de/en/fakultaeten/mathematisch-naturwissenschaftliche-fakultaet/fachbereiche/informatik/lehrstuehle/algorithms-in-bioinformatics/software/dendroscope/).
 
 In short, good clusters contain many contigs that are closely related to eachother, wheras a bad cluster contains few contigs. For full instructions on selecting good contigs see [this page](https://github.com/rrwick/Trycycler/wiki/Clustering-contigs) (under the 'Choose your clusters heading) . If you have any bad clusters, please rename the directory (with the mv command) e.g. `cluster_02` will become `bad_cluster_02`. Again, for further details [refer here](https://github.com/baileyfrancis/prasanco/edit/main/README.md).
 
 ***Once you have done this, please move on to Step 2***
+
+### Step 2 - Reconciliate clusters 
+
+#### Command 
+To run the reconicle step, simply navigate to your **--out_dir** from the previous step and enter the command shown below in to the command line:
+
+`python [path to prasanco]/prasanco.py reconcile --label1 x --label2 x --clusters1 x --clusters2 x`
+
+#### Options 
+
