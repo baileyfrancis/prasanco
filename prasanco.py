@@ -54,7 +54,7 @@ if args.command == 'initial_assembly':
 		f'trycycler subsample --reads {args.out_dir}/{args.label2}_reads.fastq --out_dir {args.out_dir}/read_subsets_2\n\n' +
 		f'mkdir {args.out_dir}/{args.label1}_assemblies\n' +
 		f'mkdir {args.out_dir}/{args.label2}_assemblies\n\n' +
-		f'flye --nano-hq {args.out_dir}/read_subsets_1/sample_01.fastq --threads {args.threads} --out-dir assembly01 && cp assembly01/assembly.fasta {args.out_dir}/{args.label1}_assemblies/assembly_01.fasta && rm -r assembly_01\n' +
+		f'flye --nano-hq {args.out_dir}/read_subsets_1/sample_01.fastq --threads {args.threads} --out-dir assembly_01 && cp assembly01/assembly.fasta {args.out_dir}/{args.label1}_assemblies/assembly_01.fasta && rm -r assembly_01\n' +
 		f'{prasanco_path}/third_party/miniasm_and_minipolish.sh {args.out_dir}/read_subsets_1/sample_02.fastq {args.threads} > assembly_02.gfa && any2fasta assembly_02.gfa > {args.out_dir}/{args.label1}_assemblies/assembly_02.fastra && rm assembly_02.gfa\n' +
 		f'raven --threads {args.threads} {args.out_dir}/read_subsets_1/sample_03.fastq > {args.out_dir}/{args.label1}_assemblies/assembly_03.fasta && rm raven.cereal')
 	InitialAssembly_script.close()
