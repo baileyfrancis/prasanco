@@ -79,7 +79,9 @@ if args.command == 'initial_assembly':
 		f'{prasanco_path}/third_party/miniasm_and_minipolish.sh {args.out_dir}/read_subsets_2/sample_11.fastq {args.threads} > assembly_11.gfa && any2fasta assembly_11.gfa > {args.out_dir}/{args.label2}_assemblies/assembly_11.fasta && rm assembly_11.gfa\n' +
 		f'raven --threads {args.threads} {args.out_dir}/read_subsets_2/sample_12.fastq > {args.out_dir}/{args.label2}_assemblies/assembly_12.fasta && rm raven.cereal\n\n' +
 		f'trycycler cluster --assemblies {args.out_dir}/{args.label1}_assemblies/*.fasta --reads {args.out_dir}/{args.label1}_reads.fastq --out_dir {args.label1}_trycycler\n' +
-		f'trycycler cluster --assemblies {args.out_dir}/{args.label2}_assemblies/*.fasta --reads {args.out_dir}/{args.label2}_reads.fastq --out_dir {args.label2}_trycycler\n')
+		f'trycycler cluster --assemblies {args.out_dir}/{args.label2}_assemblies/*.fasta --reads {args.out_dir}/{args.label2}_reads.fastq --out_dir {args.label2}_trycycler\n\n' +
+		f'rm -r {args.out_dir}/read_subsets_1\n' +
+		f'rm -r {args.out_dir}/read_subsets_2')
 	InitialAssembly_script.close()
 	os.system(f'mv InitialAssembly.sh {args.out_dir}/BatchScripts')
 	os.system(f'sbatch {args.out_dir}/BatchScripts/InitialAssembly.sh')  
