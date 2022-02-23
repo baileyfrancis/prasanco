@@ -12,7 +12,7 @@ conda env create --name prasanco_py3 --file ./conda/prasanco_py3.yml
 conda env create --name prasanco_py2 --file ./conda/prasanco_py2.yml
 ```
 
-Due to PrAsAnCo using two different Conda environments, please ensure you provide PrAsAnCo with the path to your conda/miniconda directory using `prasanco --conda [path]`. This allows PrAsAnCo to activate each of its Conda environments when they are needed. 
+Due to PrAsAnCo using two different Conda environments, please ensure you provide PrAsAnCo with the path to your conda envs/ directory using `prasanco --conda [path]`. This allows PrAsAnCo to activate each of its Conda environments when they are needed. 
 
 ## Usage 
 
@@ -39,7 +39,8 @@ Option    | Description
 When the `initial_assembly` command is run it will create a new output directory within the current working directory (This new directory will have the name assigned to it by the `--out_dir` option. 
 
 Inside this directory you will find various ouputs: 
-* **BatchScripts** directory = directory containing all scripts PrAsAnCo uses to run. If you wish to look at the SLURM outputs for these scripts, they can be found in BatchScripts/OutErr
+* **BatchScripts/** directory = directory containing all scripts PrAsAnCo uses to run. If you wish to look at the SLURM outputs for these scripts, they can be found in BatchScripts/OutErr
 * **[label1]_reads.fastq** = reads for your first sample after filtering by Filtlong
 * **[label2]_reads.fastq** = reads for your second sample after filtering by Filtlong
-* 
+* **[label1]_assemblies/** directory = directory containing all Flye, Miniasm+Minipolish and Raven assemblies for your first sample
+* **[label2]_assemblies/** directory = directory containing all Flye, Miniasm+Minipolish and Raven assemblies for your second sample
