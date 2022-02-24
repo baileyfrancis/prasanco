@@ -109,6 +109,8 @@ After you have reconciled your contigs, the next stage of the Trycycler assembly
 
 #### Command
 
+`[path to prasanco]/prasanco.py msa --label1 x --label2 x --clusters1 x --clusters 2 x`
+
 #### Options 
 
 Option   | Description
@@ -124,3 +126,14 @@ If everything has worked correctly, you should have a file named `3_msa.fasta` i
 #### Note:
 If your msa command does not produce the `3_msa.fasta` file for a cluster, remove the next worse contig from the cluster and try this step again (given that you still have a sufficient amount of contigs - you should have atleast 4). 
 
+***Once you have all of your `3_msa.fasta` files, please move on to Step 4***
+
+### Step 4 - Final assembly
+
+Once you have completed Steps 1, 2 and 3, you are now ready to produce your final Trycycler assembly for each of your samples. To do so, Trycycler first [partitions reads](https://github.com/rrwick/Trycycler/wiki/Partitioning-reads) between clusters and generates a [consensus assembly](https://github.com/rrwick/Trycycler/wiki/Generating-a-consensus). For further information on both of these steps, follow the links above.
+
+Now that we have our final Trycycler assemblies for both samples, PrAsAnco polishes these assemblies using a combination of polishing tools. Firstly, the Trycycler consensus assembly is polished using [Medaka](https://github.com/nanoporetech/medaka). Medaka improves the accuracy of our long-read Trycycler assemblies. 
+
+After polishing with Medaka, PrAsAnCo then performs two rounds of polishing using short-read Illumina data using both [Polypolish](https://github.com/rrwick/Polypolish) and [POLCA](https://github.com/alekseyzimin/masurca#polca). Both of these tools use the short-read data to further improve our polished long-read assembly.
+
+For further information on these polishing techniques, please [visit here](https://github.com/rrwick/Trycycler/wiki/Polishing-after-Trycycler).
