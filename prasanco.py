@@ -28,6 +28,7 @@ Reconcile_parser.add_argument('--clusters1', nargs='*', metavar='Clusters for yo
 Reconcile_parser.add_argument('--clusters2', nargs='*', metavar='Clusters for your second sample', type=str, help='Specify the clusters you wish to reconcile for your second sample. E.g. --clusters1 cluster_001 cluster_002 cluster_003')
 Reconcile_parser.add_argument('--label1', metavar='Label for your first sample', type=str, help='Please provide the same label for your first sample as you used for Step 1', required=True)
 Reconcile_parser.add_argument('--label2', metavar='Label for your second sample', type=str, help='Please provide the same label for your second sample as you used for Step 1', required=True)
+Reconcile_parser.add_argument('--prasanco_dir', metavar='Path to your PrAsAnCo output directory', type=str, help='Please provide the path to your PrAsAnCo output directory', required=True)
 Reconcile_parser.add_argument.add_argument('--conda', metavar="path to your conda /envs directory", type=str, help='Please provide the absolute path to your conda /envs directory e.g. /shared/home/mbxbf2/miniconda3/envs')
 
 # Create PrAsAnCo msa command 
@@ -36,6 +37,7 @@ MSA_parser.add_argument('--label1', metavar='Label for your first sample', type=
 MSA_parser.add_argument('--label2', metavar='Label for your second sample', type=str, help='Please provide the same label for your second sample as you used for Step 1 and 2', required=True)
 MSA_parser.add_argument('--clusters1', nargs='*', metavar='Clusters for your first sample', type=str, help='Specify the clusters you wish to align for your first sample. E.g. --clusters1 cluster_001 cluster_002 cluster_003')
 MSA_parser.add_argument('--clusters2', nargs='*', metavar='Clusters for your second sample', type=str, help='Specify the clusters you wish to align for your second sample. E.g. --clusters1 cluster_001 cluster_002 cluster_003')
+MSA_parser.add_argument('--prasanco_dir', metavar='Path to your PrAsAnCo output directory', type=str, help='Please provide the path to your PrAsAnCo output directory', required=True)
 MSA_parser.add_argument.add_argument('--conda', metavar="path to your conda /envs directory", type=str, help='Please provide the absolute path to your conda /envs directory e.g. /shared/home/mbxbf2/miniconda3/envs/', required=True)
 
 #Create PrAsAnCo final_assembly command
@@ -50,6 +52,7 @@ FinalAssembly_parser.add_argument('--short2_R1', metavar='R1 short reads for you
 FinalAssembly_parser.add_argument('--short2_R2', metavar='R2 short reads for your second sample', type=str, help='A single file containing your R2 Illumina short-reads for your second sample', required=True)
 FinalAssembly_parser.add_argument('--clusters1', nargs='*', metavar='Clusters for your first sample', type=str, help='Please specify the clusters for your first sample e.g. cluster_01 cluster_02 cluster_03', required=True)
 FinalAssembly_parser.add_argument('--clusters1', nargs='*', metavar='Clusters for your second sample', type=str, help='Please specify the clusters for your second sample e.g. cluster_01 cluster_02 cluster_03', required=True)
+FinalAssembly_parser.add_argument('--prasanco_dir', metavar='Path to your PrAsAnCo output directory', type=str, help='Please provide the path to your PrAsAnCo output directory', required=True)
 FinalAssembly_parser.add_argument('--threads', metavar='Number of threads', type=str, help='Specify the number of threads you wish to allocate. Recommended = 8', required=True)
 FinalAssembly_parser.add_argument('--conda', metavar="path to your conda /envs directory", type=str, help='Please provide the absolute path to your conda /envs directory e.g. /shared/home/mbxbf2/miniconda3/envs', required=True)
 
@@ -130,8 +133,8 @@ if args.command == 'reconcile':
 		'#SBATCH --cpus-per-task=4\n' +
 		'#SBATCH --mem=15g\n' +
 		'#SBATCH --time=48:00:00\n' +
-		f'#SBATCH --output=./BatchScripts/OutErr/%x.out\n' +
-		f'#SBATCH --error=./BatchScripts/OutErr/%x.err\n\n' +
+		f'#SBATCH --output={args.prasanco_dir}BatchScripts/OutErr/%x.out\n' +
+		f'#SBATCH --error={args.prasanco_dir}BatchScripts/OutErr/%x.err\n\n' +
 		'source $HOME/.bash_profile\n' +
 		f'conda activate {args.conda}prasanco_py3\n\n')
 	ReconcileScript.close()
@@ -139,17 +142,17 @@ if args.command == 'reconcile':
 	if type(args.clusters1) is list:
 		for cluster in args.clusters1:
 			AppendClusters1 = open('Reconcile.sh', 'a')
-			AppendClusters1.write(f'trycycler --reads {args.label1} --cluster_dir ./{args.label1}_trycycler/{cluster}\n')
+			AppendClusters1.write(f'trycycler --reads {args.prasanco_dir}{args.label1}_reads.fastq --cluster_dir {args.prasanco_dir}/{args.label1}_trycycler/{cluster}\n')
 			AppendClusters1.close()
 
 	if type(args.clusters2) is list:
 		for cluster in args.clusters2:
 			AppendClusters2 = open('Reconcile.sh', 'a')
-			AppendClusters2.write(f'trycycler --reads {args.label2} --cluster_dir ./{args.label2}_trycycler/{cluster}\n')
+			AppendClusters2.write(f'trycycler --reads {args.prasanco_dir}{args.label2} --cluster_dir {args.prasanco_dir}{args.label2}_trycycler/{cluster}\n')
 			AppendClusters2.close()
 
 	os.system('sbatch Reconcile.sh')
-	os.system('mv Reconcile.sh ./BatchScripts')
+	os.system(f'mv Reconcile.sh {args.prasanco_dir}BatchScripts')
 
 #=====================
 # PrAsAnCo msa command
@@ -165,8 +168,8 @@ if args.command == 'msa':
         '#SBATCH --cpus-per-task=4\n' +
         '#SBATCH --mem=15g\n' +
         '#SBATCH --time=48:00:00\n' +
-        f'#SBATCH --output=./BatchScripts/OutErr/%x.out\n' +
-        f'#SBATCH --error=./BatchScripts/OutErr/%x.err\n\n' +
+        f'#SBATCH --output={args.prasanco_dir}BatchScripts/OutErr/%x.out\n' +
+        f'#SBATCH --error={args.prasanco_dir}BatchScripts/OutErr/%x.err\n\n' +
         'source $HOME/.bash_profile\n' +
         f'conda activate {args.conda}prasanco_py3\n\n')
     MSA_script.close()
@@ -174,17 +177,17 @@ if args.command == 'msa':
     if type(args.clusters1) is list:
         for cluster in args.clusters1:
             MSA_AppendClusters1 = open('MSA.sh', 'a')
-            MSA_AppendClusters1.write(f'trycycler msa --cluster_dir ./{args.label1}_trycycler/{cluster}\n')
+            MSA_AppendClusters1.write(f'trycycler msa --cluster_dir {args.prasanco_dir}{args.label1}_trycycler/{cluster}\n')
             MSA_AppendClusters1.close()
 
     if type(args.clusters2) is list:
         for cluster in args.clusters2:
             MSA_AppendClusters2 = open('MSA.sh', 'a')
-            MSA_AppendClusters2.write(f'trycycler msa --cluster_dir ./{args.label2}_trycycler/{cluster}\n')
+            MSA_AppendClusters2.write(f'trycycler msa --cluster_dir {args.prasanco_dir}{args.label2}_trycycler/{cluster}\n')
             MSA_AppendClusters2.close()
 
     os.system('sbatch MSA.sh')
-    os.system('mv MSA.sh ./BatchScripts')
+    os.system(f'mv MSA.sh {args.prasanco_dir}BatchScripts')
 
 #================================
 # PrAsAnCo final_assembly command
@@ -199,60 +202,60 @@ if args.command == 'final_assembly':
 		'#SBATCH --cpus-per-task=4\n' +
 		'#SBATCH --mem=15g\n' +
 		'#SBATCH --time=48:00:00\n' +
-		f'#SBATCH --output=./BatchScripts/OutErr/%x.out\n' +
-		f'#SBATCH --error=./BatchScripts/OutErr/%x.err\n\n' +
+		f'#SBATCH --output={args.prasanco_dir}BatchScripts/OutErr/%x.out\n' +
+		f'#SBATCH --error={args.prasanco_dir}BatchScripts/OutErr/%x.err\n\n' +
 		'source $HOME/.bash_profile\n' +
 		f'conda activate {args.conda}prasanco_py3\n\n' +
-		f'trycycler partition --reads ./{args.label1}_reads.fastq --cluster_dirs ./{label1}_trycycler/cluster_*\n' +
-		f'trycycler partition --reads ./{args.label2}_reads.fastq --cluster_dirs ./{label2}_trycycler/cluster_*\n\n')
+		f'trycycler partition --reads {args.prasanco_dir}{args.label1}_reads.fastq --cluster_dirs {args.prasanco_dir}{label1}_trycycler/cluster_*\n' +
+		f'trycycler partition --reads {args.prasanco_dir}{args.label2}_reads.fastq --cluster_dirs {args.prasanco_dir}{label2}_trycycler/cluster_*\n\n')
 	FinalAssemblyScript.close()
 
 	for cluster in args.cluster1:
 		FinalAssembly_AppendClusters1 = open('FinalAssembly.sh', 'a')
-		FinalAssembly_AppendClusters1.write(f'trycycler consensus --cluster_dir ./{label1}_trycycler/{cluster} --threads {args.threads}\n')
+		FinalAssembly_AppendClusters1.write(f'trycycler consensus --cluster_dir {args.prasanco_dir}{label1}_trycycler/{cluster} --threads {args.threads}\n')
 		FinalAssembly_AppendClusters1.close()
 
 	for cluster in args.cluster2:
 		FinalAssembly_AppendClusters2 = open('FinalAssembly.sh', 'a')
-		FinalAssembly_AppendClusters2.write(f'trycycler consensus --cluster_dir ./{label2}_trycycler/{cluster} --threads {args.threads}\n')
+		FinalAssembly_AppendClusters2.write(f'trycycler consensus --cluster_dir {args.prasanco_dir}{label2}_trycycler/{cluster} --threads {args.threads}\n')
 		FinalAssembly_AppendClusters2.close()
 
 	FinalAssemblyScript2 = open('FinalAssembly.sh', 'a')
 	FinalAssemblyScript2.write('\n' +
-		f'cat ./{label1}_trycycler/cluster_*/7_final_consensus.fasta > ./{label1}_trycycler/consensus.fasta\n' +
-		f'cat ./{label2}_trycycler/cluster_*/7_final_consensus.fasta > ./{label2}_trycycler/consensus.fasta\n\n' +
+		f'cat {args.prasanco_dir}{label1}_trycycler/cluster_*/7_final_consensus.fasta > {args.prasanco_dir}{label1}_trycycler/consensus.fasta\n' +
+		f'cat {args.prasanco_dir}{label2}_trycycler/cluster_*/7_final_consensus.fasta > {args.prasanco_dir}{label2}_trycycler/consensus.fasta\n\n' +
 		'conda deactivate\n' +
 		f'conda activate {args.conda}/prasanco_py2\n\n' +
-		f'for c in ./{label1}_trycycler/cluster_*; do\n' +
+		f'for c in {args.prasanco_dir}{label1}_trycycler/cluster_*; do\n' +
 		'medaka_consensus -i "$c"/4_reads.fastq -d "$c"/7_final_consensus.fasta -o "$c"/medaka -m r941_min_sup_g507 -t 12\n' +
 		'mv "$c"/medaka/consensus.fasta "$c"/8_medaka.fasta\n' +
 		'rm -r "$c"/medaka "$c"/*.fai "$c"/*.mmi\n' +
 		'done\n\n' +
-		f'for c in ./{label2}_trycycler/cluster_*; do\n' +
+		f'for c in {args.prasanco_dir}{label2}_trycycler/cluster_*; do\n' +
 		'medaka_consensus -i "$c"/4_reads.fastq -d "$c"/7_final_consensus.fasta -o "$c"/medaka -m r941_min_sup_g507 -t 12\n' +
 		'mv "$c"/medaka/consensus.fasta "$c"/8_medaka.fasta\n' +
 		'rm -r "$c"/medaka "$c"/*.fai "$c"/*.mmi\n' +
 		'done\n\n' + 
-		f'cat {args.label1}_trycycler/cluster_*/8_medaka.fasta > {args,label1}_trycycler/consensus.fasta\n' +
-		f'cat {args.label2}_trycycler/cluster_*/8_medaka.fasta > {args,label2}_trycycler/consensus.fasta\n\n' +
+		f'cat {args.prasanco_dir}{args.label1}_trycycler/cluster_*/8_medaka.fasta > {args.prasanco_dir}{args,label1}_trycycler/consensus.fasta\n' +
+		f'cat {args.prasanco_dir}{args.label2}_trycycler/cluster_*/8_medaka.fasta > {args.prasanco_dir}{args,label2}_trycycler/consensus.fasta\n\n' +
 		'conda deactivate\n' +
 		f'conda activate {args.conda}/prasanco_py3'
-		f'fastp --in1 {args.short1_R1} --in2 {args.short1_R2} --out1 {args.label1}_1.fastq.gz --out2 {args.label1}_2.fastq.gz --unpaired1 {args.label1}_u.fastq.gz --unpaired2 {args.label1}_u.fastq.gz \n' +
-		f'fastp --in1 {args.short2_R1} --in2 {args.short2_R2} --out1 {args.label2}_1.fastq.gz --out2 {args.label2}_2.fastq.gz --unpaired1 {args.label2}_u.fastq.gz --unpaired2 {args.label2}_u.fastq.gz \n\n' +
-		f'bwa index ./{args.label1}_trycycler/consensus.fasta\n' +
-		f'bwa mem -t 16 -a {args.label1}_trycycler/consensus.fasta {args.label1}_1.fastq.gz > alignments_1.sam\n' +
-		f'bwa mem -t 16 -a {args.label1}_trycycler/consensus.fasta {args.label1}_2.fastq.gz > alignments_2.sam\n' +
-		f'{prasanco_path}/third_party/polypolish {args.label1}_trycycler/consensus.fasta alignments_1.sam alignments_2.sam > polypolish.fasta\n' +
-		f'bwa index ./{args.label2}_trycycler/consensus.fasta\n' +
-		f'bwa mem -t 16 -a {args.label2}_trycycler/consensus.fasta {args.label2}_1.fastq.gz > alignments_1.sam\n' +
-		f'bwa mem -t 16 -a {args.label2}_trycycler/consensus.fasta {args.label2}_2.fastq.gz > alignments_2.sam\n' +
-		f'{prasanco_path}/third_party/polypolish {args.label2}_trycycler/consensus.fasta alignments_1.sam alignments_2.sam > polypolish.fasta\n\n' +
-		f'polca.sh -a polypolish.fasta -r "{args.label1}_1.fastq.gz {args.label1}_2.fastq.gz" -t 16 -m 1G\n' +
-		f'mv *.PolcaCorrected.fa {args.label1}_final_assembly.fasta\n' +
-		f'polca.sh -a polypolish.fasta -r "{args.label2}_1.fastq.gz {args.label2}_2.fastq.gz" -t 16 -m 1G\n' +
-		f'mv *.PolcaCorrected.fa {args.label2}_final_assembly.fasta')
+		f'fastp --in1 {args.short1_R1} --in2 {args.short1_R2} --out1 {args.prasanco_dir}{args.label1}_1.fastq.gz --out2 {args.prasanco_dir}{args.label1}_2.fastq.gz --unpaired1 {args.prasanco_dir}{args.label1}_u.fastq.gz --unpaired2 {args.prasanco_dir}{args.label1}_u.fastq.gz \n' +
+		f'fastp --in1 {args.short2_R1} --in2 {args.short2_R2} --out1 {args.prasanco_dir}{args.label2}_1.fastq.gz --out2 {args.prasanco_dir}{args.label2}_2.fastq.gz --unpaired1 {args.prasanco_dir}{args.label2}_u.fastq.gz --unpaired2 {args.prasanco_dir}{args.label2}_u.fastq.gz \n\n' +
+		f'bwa index {args.prasanco_dir}{args.label1}_trycycler/consensus.fasta\n' +
+		f'bwa mem -t 16 -a {args.prasanco_dir}{args.label1}_trycycler/consensus.fasta {args.prasanco_dir}{args.label1}_1.fastq.gz > {args.prasanco_dir}{args.label1}_alignments_1.sam\n' +
+		f'bwa mem -t 16 -a {args.prasanco_dir}{args.label1}_trycycler/consensus.fasta {args.prasanco_dir}{args.label1}_2.fastq.gz > {args.prasanco_dir}{args.label1}_alignments_2.sam\n' +
+		f'{prasanco_path}/third_party/polypolish {args.prasanco_dir}{args.label1}_trycycler/consensus.fasta {args.prasanco_dir}{args.label1}_alignments_1.sam {args.prasanco_dir}{args.label2}_alignments_2.sam > {args.prasanco_dir}{args.label1}_polypolish.fasta\n' +
+		f'bwa index {args.prasanco_dir}{args.label2}_trycycler/consensus.fasta\n' +
+		f'bwa mem -t 16 -a {args.prasanco_dir}{args.label2}_trycycler/consensus.fasta {args.prasanco_dir}{args.label2}_1.fastq.gz > {args.prasanco_dir}{args.label2}_alignments_1.sam\n' +
+		f'bwa mem -t 16 -a {args.prasanco_dir}{args.label2}_trycycler/consensus.fasta {args.prasanco_dir}{args.label2}_2.fastq.gz > {args.prasanco_dir}{args.label2}_alignments_2.sam\n' +
+		f'{prasanco_path}/third_party/polypolish {args.prasanco_dir}{args.label2}_trycycler/consensus.fasta {args.prasanco_dir}{args.label2}_alignments_1.sam {args.prasanco_dir}{args.label2}_alignments_2.sam > {args.prasanco_dir}{args.label2}_polypolish.fasta\n\n' +
+		f'polca.sh -a {args.prasanco_dir}{args.label1}_polypolish.fasta -r "{args.prasanco_dir}{args.label1}_1.fastq.gz {args.prasanco_dir}{args.label1}_2.fastq.gz" -t 16 -m 1G\n' +
+		f'mv .PolcaCorrected.fa {args.prasanco_dir}{args.label1}_final_assembly.fasta\n' +
+		f'polca.sh -a {args.prasanco_dir}{args.label2}_polypolish.fasta -r "{args.prasanco_dir}{args.label2}_1.fastq.gz {args.prasanco_dir}{args.label2}_2.fastq.gz" -t 16 -m 1G\n' +
+		f'mv *.PolcaCorrected.fa {args.prasanco_dir}{args.label2}_final_assembly.fasta')
 	FinalAssemblyScript.close()
 
 	os.system('sbatch FinalAssembly.sh')
-	os.system('mv FinalAssembly.sh ./BatchScripts')
+	os.system(f'mv FinalAssembly.sh {args.prasanco_dir}/BatchScripts')
 	
