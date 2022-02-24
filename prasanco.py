@@ -124,5 +124,6 @@ if args.command == 'reconcile':
 			AppendClusters2.write(f'trycycler --reads {args.label2} --cluster_dir ./{args.label2}_trycycler/{cluster}\n')
 			AppendClusters2.close()
 
-	os.system('mv Reconcile.sh ./BatchScripts')
 	os.system('sbatch Reconcile.sh')
+	os.system('mv Reconcile.sh ./BatchScripts')
+	
