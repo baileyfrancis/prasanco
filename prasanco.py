@@ -56,6 +56,14 @@ FinalAssembly_parser.add_argument('--prasanco_dir', metavar='Path to your PrAsAn
 FinalAssembly_parser.add_argument('--threads', metavar='Number of threads', type=str, help='Specify the number of threads you wish to allocate. Recommended = 8', required=True)
 FinalAssembly_parser.add_argument('--conda', metavar="path to your conda /envs directory", type=str, help='Please provide the absolute path to your conda /envs directory e.g. /shared/home/mbxbf2/miniconda3/envs', required=True)
 
+#Create PrAsAnCo QC command 
+QC_parser = subparsers.add_parser('QC', help='Perform QC on your final assemblies for your two samples')
+QC_parser.add_argument('--label1', metavar='Label for your first sample', type=str, help='This label will be applied to all files relating to your first sample', required=True)
+QC_parser.add_argument('--label2', metavar='Label for your second sample', type=str, help='This label will be applied to all files relating to your second sample', required=True)
+QC_parser.add_argument('--reference', metavar='Reference assembly for your sample', type=str, help='Please provide a reference assembly for your samples', required=True)
+QC_parser.add_argument('--prasanco_dir', metavar='Path to your PrAsAnCo output directory', type=str, help='Please provide the path to your PrAsAnCo output directory', required=True)
+QC_parser.add_argument('--conda', metavar="path to your conda /envs directory", type=str, help='Please provide the absolute path to your conda /envs directory e.g. /shared/home/mbxbf2/miniconda3/envs')
+
 # Create PrAsAnCo annotate command 
 Annotate_parser = subparsers.add_parser('annotate', help='Annotate both of your samples using PROKKA')
 Annotate_parser.add_argument('--label1', metavar='Label for your first sample', type=str, help='Please provide a label for your first sample. This name will be added to all output files relating to your first sample', required=True)
@@ -294,6 +302,43 @@ if args.command == 'final_assembly':
 
 	os.system('sbatch FinalAssembly.sh')
 	os.system(f'mv FinalAssembly.sh {args.prasanco_dir}/BatchScripts')
+
+#====================
+# PrAsAnCo QC command
+#====================
+
+if args.command == 'QC':
+
+	if args.conda.endswith('/') == False:
+		args.conda = args.conda + '/'
+
+	if args.prasanco_dir.endswith('/') == False:
+		args.prasanco_dir = args.prasanco_dir + '/'
+
+	os.system(f'mkdir {args.prasanco_dir}QC')
+
+	QC_Script = open('QC.sh', 'w+')
+	QC_Script.write('#!/bin/bash\n' +
+		'#SBATCH --job-name=QC\n' +
+		'#SBATCH --nodes=1\n' +
+		'#SBATCH --tasks-per-node=1\n' +
+		'#SBATCH --cpus-per-task=4\n' +
+		'#SBATCH --mem=15g\n' +
+		'#SBATCH --time=48:00:00\n' +
+		f'#SBATCH --output={args.prasanco_dir}BatchScripts/OutErr/%x.out\n' +
+		f'#SBATCH --error={args.prasanco_dir}BatchScripts/OutErr/%x.err\n\n' +
+		'source $HOME/.bash_profile\n' +
+		f'conda activate {args.conda}prasanco_py2\n\n' +
+		f'quast -o {args.prasanco_dir}QC/{args.label1}_QUAST -r {args.reference} --glimmer {args.prasanco_dir}{args.label1}_final_assembly.fasta\n' +
+		f'quast -o {args.prasanco_dir}QC/{args.label2}_QUAST -r {args.reference} --glimmer {args.prasanco_dir}{args.label2}_final_assembly.fasta\n\n' +
+		'conda deactivate\n' +
+		f'conda activate {args.conda}prasanco_py3' +
+		f'busco -m genome -i {args.prasanco_dir}{args.label1}_final_assembly.fasta -o {args.prasanco_dir}QC/{args.label1}_BUSCO --auto-lineage-prok --out-path {args.prasanco_dir}QC --update-data\n' +
+		f'busco -m genome -i {args.prasanco_dir}{args.label2}_final_assembly.fasta -o {args.prasanco_dir}QC/{args.label2}_BUSCO --auto-lineage-prok --out-path {args.prasanco_dir}QC --update-data')
+	QC_Script.close()
+
+	os.system('sbatch QC.sh')
+	os.system(f'mv QC.sh {args.prasanco_dir}BatchScripts')
 
 #==========================
 # PrAsAnCo annotate command
