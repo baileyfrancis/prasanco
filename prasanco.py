@@ -56,6 +56,19 @@ FinalAssembly_parser.add_argument('--prasanco_dir', metavar='Path to your PrAsAn
 FinalAssembly_parser.add_argument('--threads', metavar='Number of threads', type=str, help='Specify the number of threads you wish to allocate. Recommended = 8', required=True)
 FinalAssembly_parser.add_argument('--conda', metavar="path to your conda /envs directory", type=str, help='Please provide the absolute path to your conda /envs directory e.g. /shared/home/mbxbf2/miniconda3/envs', required=True)
 
+# Create PrAsAnCo annotate command 
+Annotate_parser = subparsers.add_parser('annotate', help='Annotate both of your samples using PROKKA')
+Annotate_parser.add_argument('--label1', metavar='Label for your first sample', type=str, help='Please provide a label for your first sample. This name will be added to all output files relating to your first sample', required=True)
+Annotate_parser.add_argument('--label2', metavar='Label for your second sample', type=str, help='Please provide a label for your second sample. This name will be added to all output files relating to your second sample', required=True)
+Annotate_parser.add_argument('--assembly1' metavar='Final assembly for your first sample', type=str, help='Please provide the path to your final PrAsAnCo assembly for your first sample. This should be named [label1]_final_assembly.fasta', required=True)
+Annotate_parser.add_argument('--assembly2' metavar='Final assembly for your second sample', type=str, help='Please provide the path to your final PrAsAnCo assembly for your second sample. This should be named [label2]_final_assembly.fasta', required=True)
+Annotate_parser.add_argument('--reference', metavar='Reference assembly for your sample', type=str, help='Please provide a reference assembly for your samples')
+Annotate_parser.add_argument('--kingdom', metavar='Kingdom name for your samples', type=str, help='Please provide the kingdom name for your samples e.g. Archaea')
+Annotate_parser.add_argument('--genus', metavar='Genus name for your samples', type=str, help='Please provide the genus name for your samples e.g. Haloferax', required=True)
+Annotate_parser.add_argument('--species', metavar='Species name for your samples', type=str, help='Please provide the species name for your samples e.g. volcanii', required=True)
+Annotate_parser.add_argument('--prasanco_dir', metavar='Path to your PrAsAnCo output directory', type=str, help='Please provide the path to your PrAsAnCo output directory', required=True)
+Annotate_parser.add_argument.add_argument('--conda', metavar="path to your conda /envs directory", type=str, help='Please provide the absolute path to your conda /envs directory e.g. /shared/home/mbxbf2/miniconda3/envs')
+
 args = parser.parse_args()
 
 #==================================
@@ -281,4 +294,35 @@ if args.command == 'final_assembly':
 
 	os.system('sbatch FinalAssembly.sh')
 	os.system(f'mv FinalAssembly.sh {args.prasanco_dir}/BatchScripts')
+
+#==========================
+# PrAsAnCo annotate command
+#==========================
+
+if args.command == 'annotate':
+	
+	if args.conda.endswith('/') == False:
+		args.conda = args.conda + '/'
+
+	if args.prasanco_dir.endswith('/') == False:
+		args.prasanco_dir = args.prasanco_dir + '/'
+
+	AnnotateScript= open('Annotate.sh', 'w+')
+	AnnotateScript.write('#!/bin/bash\n' +
+		'#SBATCH --job-name=Annotate\n' +
+		'#SBATCH --nodes=1\n' +
+		'#SBATCH --tasks-per-node=1\n' +
+		'#SBATCH --cpus-per-task=4\n' +
+		'#SBATCH --mem=15g\n' +
+		'#SBATCH --time=48:00:00\n' +
+		f'#SBATCH --output={args.prasanco_dir}BatchScripts/OutErr/%x.out\n' +
+		f'#SBATCH --error={args.prasanco_dir}BatchScripts/OutErr/%x.err\n\n' +
+		'source $HOME/.bash_profile\n' +
+		f'conda activate {args.conda}prasanco_py3\n\n' +
+		f'prokka --outdir {args.prasanco_dir}{args.label1}_PROKKA --force --prefix {args.label1} --kingdom {args.kingdom} --genus {args.genus} --species {args.species} --usegenus {args.assembly1}\n' +
+		f'prokka --outdir {args.prasanco_dir}{args.label2}_PROKKA --force --prefix {args.label2} --kingdom {args.kingdom} --genus {args.genus} --species {args.species} --usegenus {args.assembly2}\n')
+	AnnotateScript.close()
+
+	os.system('sbatch Annotate.sh')
+	os.system(f'mv Annotate.sh {args.prasanco_dir}BatchScripts')
 	
