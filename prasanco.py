@@ -68,6 +68,9 @@ if args.command == 'initial_assembly':
 	os.mkdir(f'{args.out_dir}/BatchScripts')
 	os.mkdir(f'{args.out_dir}/BatchScripts/OutErr')
 	
+	if args.conda.endswith('/') == False:
+		args.conda = args.conda + '/'
+
 	InitialAssembly_script = open('InitialAssembly.sh', 'w+')
 	InitialAssembly_script.write('#!/bin/bash\n' +
 		'#SBATCH --job-name=InitialAssembly\n' +
@@ -125,6 +128,13 @@ if args.command == 'initial_assembly':
 #===========================
 
 if args.command == 'reconcile':
+	
+	if args.conda.endswith('/') == False:
+		args.conda = args.conda + '/'
+
+	if args.prasanco_dir.endswith('/') == False:
+		args.prasanco_dir = args.prasanco_dir + '/'
+
 	ReconcileScript= open('Reconcile.sh', 'w+')
 	ReconcileScript.write('#!/bin/bash\n' +
 		'#SBATCH --job-name=Reconcile\n' +
@@ -160,6 +170,12 @@ if args.command == 'reconcile':
 
 if args.command == 'msa':
 
+	if args.conda.endswith('/') == False:
+		args.conda = args.conda + '/'
+
+	if args.prasanco_dir.endswith('/') == False:
+		args.prasanco_dir = args.prasanco_dir + '/'
+
     MSA_script = open('MSA.sh', 'w+')
     MSA_script.write('#!/bin/bash\n' +
         '#SBATCH --job-name=MSA\n' +
@@ -194,6 +210,13 @@ if args.command == 'msa':
 #================================
 
 if args.command == 'final_assembly':
+
+	if args.conda.endswith('/') == False:
+		args.conda = args.conda + '/'
+
+	if args.prasanco_dir.endswith('/') == False:
+		args.prasanco_dir = args.prasanco_dir + '/'
+
 	FinalAssemblyScript = open('FinalAssembly.sh', 'w+')
 	FinalAssemblyScript.write('#!/bin/bash\n' +
 		'#SBATCH --job-name=FinalAssembly\n' +
