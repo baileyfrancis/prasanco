@@ -29,6 +29,15 @@ Reconcile_parser.add_argument('--clusters2', nargs='*', metavar='Clusters for yo
 Reconcile_parser.add_argument('--label1', metavar='Label for your first sample', type=str, help='Please provide the same label for your first sample as you used for Step 1', required=True)
 Reconcile_parser.add_argument('--label2', metavar='Label for your second sample', type=str, help='Please provide the same label for your second sample as you used for Step 1', required=True)
 
+# Create PrAsAnCo msa command 
+MSA_parser = subparsers.add_parser('msa', help = 'Perform a multiple sequence alignment for each of your samples contigs')
+MSA_parser.add_argument('--label1', metavar='Label for your first sample', type=str, help='Please provide the same label for your first sample as you used for Step 1 and 2', required=True)
+MSA_parser.add_argument('--label2', metavar='Label for your second sample', type=str, help='Please provide the same label for your second sample as you used for Step 1 and 2', required=True)
+MSA_parser.add_argument('--clusters1', nargs='*', metavar='Clusters for your first sample', type=str, help='Specify the clusters you wish to align for your first sample. E.g. --clusters1 cluster_001 cluster_002 cluster_003')
+MSA_parser.add_argument('--clusters2', nargs='*', metavar='Clusters for your second sample', type=str, help='Specify the clusters you wish to align for your second sample. E.g. --clusters1 cluster_001 cluster_002 cluster_003')
+
+args = parser.parse_args()
+
 args = parser.parse_args()
 
 #==================================
@@ -126,4 +135,39 @@ if args.command == 'reconcile':
 
 	os.system('sbatch Reconcile.sh')
 	os.system('mv Reconcile.sh ./BatchScripts')
+
+#=====================
+# PrAsAnCo msa command
+#=====================
+
+if args.command == 'msa':
+
+    MSA_script = open('MSA.sh', 'w+')
+    MSA_script.write('#!/bin/bash\n' +
+        '#SBATCH --job-name=MSA\n' +
+        '#SBATCH --nodes=1\n' +
+        '#SBATCH --tasks-per-node=1\n' +
+        '#SBATCH --cpus-per-task=4\n' +
+        '#SBATCH --mem=15g\n' +
+        '#SBATCH --time=48:00:00\n' +
+        f'#SBATCH --output=./BatchScripts/OutErr/%x.out\n' +
+        f'#SBATCH --error=./BatchScripts/OutErr/%x.err\n\n' +
+        'source $HOME/.bash_profile\n' +
+        f'conda activate prasanco_py3\n\n')
+    MSA_script.close()
+
+    if type(args.clusters1) is list:
+        for cluster in args.clusters1:
+            MSA_AppendClusters1 = open('MSA.sh', 'a')
+            MSA_AppendClusters1.write(f'trycycler msa --cluster_dir ./{args.label1}_trycycler/{cluster}\n')
+            MSA_AppendClusters1.close()
+
+    if type(args.clusters2) is list:
+        for cluster in args.clusters2:
+            MSA_AppendClusters2 = open('MSA.sh', 'a')
+            MSA_AppendClusters2.write(f'trycycler msa --cluster_dir ./{args.label2}_trycycler/{cluster}\n')
+            MSA_AppendClusters2.close()
+
+    os.system('sbatch MSA.sh')
+    os.system('mv MSA.sh ./BatchScripts')
 	
