@@ -28,6 +28,7 @@ Reconcile_parser.add_argument('--clusters1', nargs='*', metavar='Clusters for yo
 Reconcile_parser.add_argument('--clusters2', nargs='*', metavar='Clusters for your second sample', type=str, help='Specify the clusters you wish to reconcile for your second sample. E.g. --clusters1 cluster_001 cluster_002 cluster_003')
 Reconcile_parser.add_argument('--label1', metavar='Label for your first sample', type=str, help='Please provide the same label for your first sample as you used for Step 1', required=True)
 Reconcile_parser.add_argument('--label2', metavar='Label for your second sample', type=str, help='Please provide the same label for your second sample as you used for Step 1', required=True)
+Reconcile_parser.add_argument.add_argument('--conda', metavar="path to your conda /envs directory", type=str, help='Please provide the absolute path to your conda /envs directory e.g. /shared/home/mbxbf2/miniconda3/envs')
 
 # Create PrAsAnCo msa command 
 MSA_parser = subparsers.add_parser('msa', help = 'Perform a multiple sequence alignment for each of your samples contigs')
@@ -35,8 +36,7 @@ MSA_parser.add_argument('--label1', metavar='Label for your first sample', type=
 MSA_parser.add_argument('--label2', metavar='Label for your second sample', type=str, help='Please provide the same label for your second sample as you used for Step 1 and 2', required=True)
 MSA_parser.add_argument('--clusters1', nargs='*', metavar='Clusters for your first sample', type=str, help='Specify the clusters you wish to align for your first sample. E.g. --clusters1 cluster_001 cluster_002 cluster_003')
 MSA_parser.add_argument('--clusters2', nargs='*', metavar='Clusters for your second sample', type=str, help='Specify the clusters you wish to align for your second sample. E.g. --clusters1 cluster_001 cluster_002 cluster_003')
-
-args = parser.parse_args()
+MSA_parser.add_argument.add_argument('--conda', metavar="path to your conda /envs directory", type=str, help='Please provide the absolute path to your conda /envs directory e.g. /shared/home/mbxbf2/miniconda3/envs/', required=True)
 
 args = parser.parse_args()
 
@@ -118,7 +118,7 @@ if args.command == 'reconcile':
 		f'#SBATCH --output=./BatchScripts/OutErr/%x.out\n' +
 		f'#SBATCH --error=./BatchScripts/OutErr/%x.err\n\n' +
 		'source $HOME/.bash_profile\n' +
-		f'conda activate prasanco_py3\n\n')
+		f'conda activate {args.conda}prasanco_py3\n\n')
 	ReconcileScript.close()
 
 	if type(args.clusters1) is list:
@@ -153,7 +153,7 @@ if args.command == 'msa':
         f'#SBATCH --output=./BatchScripts/OutErr/%x.out\n' +
         f'#SBATCH --error=./BatchScripts/OutErr/%x.err\n\n' +
         'source $HOME/.bash_profile\n' +
-        f'conda activate prasanco_py3\n\n')
+        f'conda activate {args.conda}prasanco_py3\n\n')
     MSA_script.close()
 
     if type(args.clusters1) is list:
