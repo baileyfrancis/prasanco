@@ -3,16 +3,16 @@ import argparse
 import os
 
 # Extract useful information for use downstream 
-prasanco_path = os.path.dirname(os.path.realpath(__file__))
+prasanco_path = os.path.dirname(os.path.realpath(__file__)) #path to where PrAsAnCo is installed on the user's machine 
 
 #================================================================
 # Create arguments to be passed to the command line using argparse
 #================================================================
 parser=argparse.ArgumentParser(description='PrAsAnCo will assemble, annotate and compare two prokaryotic genomes using both Illumina short-read and Oxford Nanopore long-read data as inputs')
 
-subparsers = parser.add_subparsers(title='Commands', dest='command')
+subparsers = parser.add_subparsers(title='Commands', dest='command') # create commands for PrAsAnCo e.g. prasanco.py [command]
 
-# Create PrAsAnCo initial_assembly command
+# Create PrAsAnCo initial_assembly command and options
 InitialAssembly_parser = subparsers.add_parser('initial_assembly', help='create initial assemblys for both of your samples using Oxford Nanopore long-read data. This step will take your long-reads, assemble them and attempt to cluster them in to contigs')
 InitialAssembly_parser.add_argument('--label1', metavar='Label for your first sample', type=str, help='This label will be applied to all files relating to your first sample', required=True)
 InitialAssembly_parser.add_argument('--label2', metavar='Label for your second sample', type=str, help='This label will be applied to all files relating to your second sample', required=True)
@@ -22,7 +22,7 @@ InitialAssembly_parser.add_argument('--threads', metavar='Number of threads', ty
 InitialAssembly_parser.add_argument('--conda', metavar='Path to your Conda/Miniconda environment directory', type=str, help='Please procide the absolute path to your Conda/Miniconda environments directory e.g. /shared/home/mbxbf2/miniconda3/envs', required=True)
 InitialAssembly_parser.add_argument('--out_dir', metavar='Output directory', type=str, help='Output directory for your initial assemblies')
 
-# Create PrAsAnCo reconcile command
+# Create PrAsAnCo reconcile command and options
 Reconcile_parser = subparsers.add_parser('reconcile', help='Perform the Trycycler reconciliation step for each of your samples')
 Reconcile_parser.add_argument('--clusters1', nargs='*', metavar='Clusters for your first sample', type=str, help='Specify the clusters you wish to reconcile for your first sample. E.g. --clusters1 cluster_001 cluster_002 cluster_003')
 Reconcile_parser.add_argument('--clusters2', nargs='*', metavar='Clusters for your second sample', type=str, help='Specify the clusters you wish to reconcile for your second sample. E.g. --clusters1 cluster_001 cluster_002 cluster_003')
@@ -31,7 +31,7 @@ Reconcile_parser.add_argument('--label2', metavar='Label for your second sample'
 Reconcile_parser.add_argument('--prasanco_dir', metavar='Path to your PrAsAnCo output directory', type=str, help='Please provide the path to your PrAsAnCo output directory', required=True)
 Reconcile_parser.add_argument.add_argument('--conda', metavar="path to your conda /envs directory", type=str, help='Please provide the absolute path to your conda /envs directory e.g. /shared/home/mbxbf2/miniconda3/envs')
 
-# Create PrAsAnCo msa command 
+# Create PrAsAnCo msa command and options
 MSA_parser = subparsers.add_parser('msa', help = 'Perform a multiple sequence alignment for each of your samples contigs')
 MSA_parser.add_argument('--label1', metavar='Label for your first sample', type=str, help='Please provide the same label for your first sample as you used for Step 1 and 2', required=True)
 MSA_parser.add_argument('--label2', metavar='Label for your second sample', type=str, help='Please provide the same label for your second sample as you used for Step 1 and 2', required=True)
@@ -40,7 +40,7 @@ MSA_parser.add_argument('--clusters2', nargs='*', metavar='Clusters for your sec
 MSA_parser.add_argument('--prasanco_dir', metavar='Path to your PrAsAnCo output directory', type=str, help='Please provide the path to your PrAsAnCo output directory', required=True)
 MSA_parser.add_argument.add_argument('--conda', metavar="path to your conda /envs directory", type=str, help='Please provide the absolute path to your conda /envs directory e.g. /shared/home/mbxbf2/miniconda3/envs/', required=True)
 
-#Create PrAsAnCo final_assembly command
+# Create PrAsAnCo final_assembly command and options
 FinalAssembly_parser = subparsers.add_parser('final_assembly', help='Finish the Trycycler assemblies for both of your samples and polish them.')
 FinalAssembly_parser.add_argument('--label1', metavar='Label for your first sample', type=str, help='Please provide the same label for your first sample as you used in Steps 1, 2 and 3', required=True)
 FinalAssembly_parser.add_argument('--label2', metavar='Label for your second sample', type=str, help='Please provide the same label for your second sample as you used in Steps 1, 2 and 3', required=True)
@@ -56,7 +56,7 @@ FinalAssembly_parser.add_argument('--prasanco_dir', metavar='Path to your PrAsAn
 FinalAssembly_parser.add_argument('--threads', metavar='Number of threads', type=str, help='Specify the number of threads you wish to allocate. Recommended = 8', required=True)
 FinalAssembly_parser.add_argument('--conda', metavar="path to your conda /envs directory", type=str, help='Please provide the absolute path to your conda /envs directory e.g. /shared/home/mbxbf2/miniconda3/envs', required=True)
 
-#Create PrAsAnCo QC command 
+# Create PrAsAnCo QC command and options 
 QC_parser = subparsers.add_parser('QC', help='Perform QC on your final assemblies for your two samples')
 QC_parser.add_argument('--label1', metavar='Label for your first sample', type=str, help='This label will be applied to all files relating to your first sample', required=True)
 QC_parser.add_argument('--label2', metavar='Label for your second sample', type=str, help='This label will be applied to all files relating to your second sample', required=True)
@@ -66,7 +66,7 @@ QC_parser.add_argument('--reference', metavar='Reference assembly for your sampl
 QC_parser.add_argument('--prasanco_dir', metavar='Path to your PrAsAnCo output directory', type=str, help='Please provide the path to your PrAsAnCo output directory', required=True)
 QC_parser.add_argument('--conda', metavar="path to your conda /envs directory", type=str, help='Please provide the absolute path to your conda /envs directory e.g. /shared/home/mbxbf2/miniconda3/envs')
 
-# Create PrAsAnCo annotate command 
+# Create PrAsAnCo annotate command and options
 Annotate_parser = subparsers.add_parser('annotate', help='Annotate both of your samples using PROKKA')
 Annotate_parser.add_argument('--label1', metavar='Label for your first sample', type=str, help='Please provide a label for your first sample. This name will be added to all output files relating to your first sample', required=True)
 Annotate_parser.add_argument('--label2', metavar='Label for your second sample', type=str, help='Please provide a label for your second sample. This name will be added to all output files relating to your second sample', required=True)
@@ -88,13 +88,13 @@ args = parser.parse_args()
 if args.command == 'initial_assembly':
 	
 	os.mkdir(args.out_dir) # Create an ouput directory for the initial assembly
-	os.mkdir(f'{args.out_dir}/BatchScripts')
-	os.mkdir(f'{args.out_dir}/BatchScripts/OutErr')
+	os.mkdir(f'{args.out_dir}/BatchScripts') # Create directory for all PrAsAnCo scripts
+	os.mkdir(f'{args.out_dir}/BatchScripts/OutErr') # Create a directory for all PrAsAnCo outputs
 	
 	if args.conda.endswith('/') == False:
-		args.conda = args.conda + '/'
+		args.conda = args.conda + '/' # Ensure args.conda is a valid path
 
-	InitialAssembly_script = open('InitialAssembly.sh', 'w+')
+	InitialAssembly_script = open('InitialAssembly.sh', 'w+') # Create initial assembly batch script
 	InitialAssembly_script.write('#!/bin/bash\n' +
 		'#SBATCH --job-name=InitialAssembly\n' +
 		'#SBATCH --nodes=1\n' +
@@ -143,8 +143,8 @@ if args.command == 'initial_assembly':
 		f'rm -r {args.out_dir}/read_subsets_1\n' +
 		f'rm -r {args.out_dir}/read_subsets_2')
 	InitialAssembly_script.close()
-	os.system(f'mv InitialAssembly.sh {args.out_dir}/BatchScripts')
-	os.system(f'sbatch {args.out_dir}/BatchScripts/InitialAssembly.sh')  
+	os.system(f'mv InitialAssembly.sh {args.out_dir}/BatchScripts') 
+	os.system(f'sbatch {args.out_dir}/BatchScripts/InitialAssembly.sh') # Submit the initial assembly batch job
 
 #===========================
 # PrAsAnCo reconcile command
@@ -153,12 +153,12 @@ if args.command == 'initial_assembly':
 if args.command == 'reconcile':
 	
 	if args.conda.endswith('/') == False:
-		args.conda = args.conda + '/'
+		args.conda = args.conda + '/' # Ensure args.conda is a valid path
 
 	if args.prasanco_dir.endswith('/') == False:
-		args.prasanco_dir = args.prasanco_dir + '/'
+		args.prasanco_dir = args.prasanco_dir + '/' # Ensure args.prasanco_dir is a valid path
 
-	ReconcileScript= open('Reconcile.sh', 'w+')
+	ReconcileScript= open('Reconcile.sh', 'w+') # Create reconicle batch script
 	ReconcileScript.write('#!/bin/bash\n' +
 		'#SBATCH --job-name=Reconcile\n' +
 		'#SBATCH --nodes=1\n' +
@@ -172,19 +172,19 @@ if args.command == 'reconcile':
 		f'conda activate {args.conda}prasanco_py3\n\n')
 	ReconcileScript.close()
 
-	if type(args.clusters1) is list:
+	if type(args.clusters1) is list: # add specified clusters to the batch script
 		for cluster in args.clusters1:
 			AppendClusters1 = open('Reconcile.sh', 'a')
 			AppendClusters1.write(f'trycycler --reads {args.prasanco_dir}{args.label1}_reads.fastq --cluster_dir {args.prasanco_dir}/{args.label1}_trycycler/{cluster}\n')
 			AppendClusters1.close()
 
-	if type(args.clusters2) is list:
+	if type(args.clusters2) is list: # add specified clusters to the batch script
 		for cluster in args.clusters2:
 			AppendClusters2 = open('Reconcile.sh', 'a')
 			AppendClusters2.write(f'trycycler --reads {args.prasanco_dir}{args.label2} --cluster_dir {args.prasanco_dir}{args.label2}_trycycler/{cluster}\n')
 			AppendClusters2.close()
 
-	os.system('sbatch Reconcile.sh')
+	os.system('sbatch Reconcile.sh') # Submit reconicle batch job
 	os.system(f'mv Reconcile.sh {args.prasanco_dir}BatchScripts')
 
 #=====================
@@ -194,12 +194,12 @@ if args.command == 'reconcile':
 if args.command == 'msa':
 
 	if args.conda.endswith('/') == False:
-		args.conda = args.conda + '/'
+		args.conda = args.conda + '/' # Ensure args.conda is a valid path
 
 	if args.prasanco_dir.endswith('/') == False:
-		args.prasanco_dir = args.prasanco_dir + '/'
+		args.prasanco_dir = args.prasanco_dir + '/' # Ensure args.prasanco_dir is a valid path
 
-    MSA_script = open('MSA.sh', 'w+')
+    MSA_script = open('MSA.sh', 'w+') # Create msa batch script
     MSA_script.write('#!/bin/bash\n' +
         '#SBATCH --job-name=MSA\n' +
         '#SBATCH --nodes=1\n' +
@@ -213,19 +213,19 @@ if args.command == 'msa':
         f'conda activate {args.conda}prasanco_py3\n\n')
     MSA_script.close()
 
-    if type(args.clusters1) is list:
+    if type(args.clusters1) is list: # add specified clusters to the batch script
         for cluster in args.clusters1:
             MSA_AppendClusters1 = open('MSA.sh', 'a')
             MSA_AppendClusters1.write(f'trycycler msa --cluster_dir {args.prasanco_dir}{args.label1}_trycycler/{cluster}\n')
             MSA_AppendClusters1.close()
 
-    if type(args.clusters2) is list:
+    if type(args.clusters2) is list: # add specified clusters to the batch script
         for cluster in args.clusters2:
             MSA_AppendClusters2 = open('MSA.sh', 'a')
             MSA_AppendClusters2.write(f'trycycler msa --cluster_dir {args.prasanco_dir}{args.label2}_trycycler/{cluster}\n')
             MSA_AppendClusters2.close()
 
-    os.system('sbatch MSA.sh')
+    os.system('sbatch MSA.sh') # Submit msa batch script
     os.system(f'mv MSA.sh {args.prasanco_dir}BatchScripts')
 
 #================================
@@ -235,12 +235,12 @@ if args.command == 'msa':
 if args.command == 'final_assembly':
 
 	if args.conda.endswith('/') == False:
-		args.conda = args.conda + '/'
+		args.conda = args.conda + '/' # Ensure args.conda is a valid path
 
 	if args.prasanco_dir.endswith('/') == False:
-		args.prasanco_dir = args.prasanco_dir + '/'
+		args.prasanco_dir = args.prasanco_dir + '/' # Ensure args.prasanco_dir is a valid path
 
-	FinalAssemblyScript = open('FinalAssembly.sh', 'w+')
+	FinalAssemblyScript = open('FinalAssembly.sh', 'w+') # Create final assembly batch script
 	FinalAssemblyScript.write('#!/bin/bash\n' +
 		'#SBATCH --job-name=FinalAssembly\n' +
 		'#SBATCH --nodes=1\n' +
@@ -256,17 +256,17 @@ if args.command == 'final_assembly':
 		f'trycycler partition --reads {args.prasanco_dir}{args.label2}_reads.fastq --cluster_dirs {args.prasanco_dir}{label2}_trycycler/cluster_*\n\n')
 	FinalAssemblyScript.close()
 
-	for cluster in args.cluster1:
+	for cluster in args.cluster1: #add specified clusters to the batch script
 		FinalAssembly_AppendClusters1 = open('FinalAssembly.sh', 'a')
 		FinalAssembly_AppendClusters1.write(f'trycycler consensus --cluster_dir {args.prasanco_dir}{label1}_trycycler/{cluster} --threads {args.threads}\n')
 		FinalAssembly_AppendClusters1.close()
 
-	for cluster in args.cluster2:
+	for cluster in args.cluster2: #add specified clusters to the batch script
 		FinalAssembly_AppendClusters2 = open('FinalAssembly.sh', 'a')
 		FinalAssembly_AppendClusters2.write(f'trycycler consensus --cluster_dir {args.prasanco_dir}{label2}_trycycler/{cluster} --threads {args.threads}\n')
 		FinalAssembly_AppendClusters2.close()
 
-	FinalAssemblyScript2 = open('FinalAssembly.sh', 'a')
+	FinalAssemblyScript2 = open('FinalAssembly.sh', 'a') # Continue final assembly batch script
 	FinalAssemblyScript2.write('\n' +
 		f'cat {args.prasanco_dir}{label1}_trycycler/cluster_*/7_final_consensus.fasta > {args.prasanco_dir}{label1}_trycycler/consensus.fasta\n' +
 		f'cat {args.prasanco_dir}{label2}_trycycler/cluster_*/7_final_consensus.fasta > {args.prasanco_dir}{label2}_trycycler/consensus.fasta\n\n' +
@@ -302,7 +302,7 @@ if args.command == 'final_assembly':
 		f'mv *.PolcaCorrected.fa {args.prasanco_dir}{args.label2}_final_assembly.fasta')
 	FinalAssemblyScript.close()
 
-	os.system('sbatch FinalAssembly.sh')
+	os.system('sbatch FinalAssembly.sh') # Submit final assembly batch job
 	os.system(f'mv FinalAssembly.sh {args.prasanco_dir}/BatchScripts')
 
 #====================
@@ -312,14 +312,14 @@ if args.command == 'final_assembly':
 if args.command == 'QC':
 
 	if args.conda.endswith('/') == False:
-		args.conda = args.conda + '/'
+		args.conda = args.conda + '/' # Ensure args.conda is a valid path
 
 	if args.prasanco_dir.endswith('/') == False:
-		args.prasanco_dir = args.prasanco_dir + '/'
+		args.prasanco_dir = args.prasanco_dir + '/' # Ensure args.prasanco_dir is a valid path
 
 	os.system(f'mkdir {args.prasanco_dir}QC')
 
-	QC_Script = open('QC.sh', 'w+')
+	QC_Script = open('QC.sh', 'w+') # Create QC batch script
 	QC_Script.write('#!/bin/bash\n' +
 		'#SBATCH --job-name=QC\n' +
 		'#SBATCH --nodes=1\n' +
@@ -339,7 +339,7 @@ if args.command == 'QC':
 		f'busco -m genome -i {args.assembly2} -o {args.prasanco_dir}QC/{args.label2}_BUSCO --auto-lineage-prok --out-path {args.prasanco_dir}QC --update-data')
 	QC_Script.close()
 
-	os.system('sbatch QC.sh')
+	os.system('sbatch QC.sh') # Submit QC batch job
 	os.system(f'mv QC.sh {args.prasanco_dir}BatchScripts')
 
 #==========================
@@ -349,12 +349,12 @@ if args.command == 'QC':
 if args.command == 'annotate':
 	
 	if args.conda.endswith('/') == False:
-		args.conda = args.conda + '/'
+		args.conda = args.conda + '/' # Ensure args.conda is a valid path
 
 	if args.prasanco_dir.endswith('/') == False:
-		args.prasanco_dir = args.prasanco_dir + '/'
+		args.prasanco_dir = args.prasanco_dir + '/' # Ensure args.prasanco_dir is a valid path
 
-	AnnotateScript= open('Annotate.sh', 'w+')
+	AnnotateScript= open('Annotate.sh', 'w+') # Create annotate batch script
 	AnnotateScript.write('#!/bin/bash\n' +
 		'#SBATCH --job-name=Annotate\n' +
 		'#SBATCH --nodes=1\n' +
@@ -370,6 +370,6 @@ if args.command == 'annotate':
 		f'prokka --outdir {args.prasanco_dir}{args.label2}_PROKKA --force --prefix {args.label2} --kingdom {args.kingdom} --genus {args.genus} --species {args.species} --usegenus {args.assembly2}\n')
 	AnnotateScript.close()
 
-	os.system('sbatch Annotate.sh')
+	os.system('sbatch Annotate.sh') # Submit annotate batch job 
 	os.system(f'mv Annotate.sh {args.prasanco_dir}BatchScripts')
 	
