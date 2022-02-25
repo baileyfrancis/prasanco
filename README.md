@@ -34,7 +34,7 @@ To assemble your long-read data, PrAsAnCo uses [Trycycler](https://github.com/rr
 #### Command
 To run the initial assembly step please use the command shown here: (options are described in further detail below)
 
-`[path to prasanco]/prasanco.py initial_assembly --label1 x --label2 x --reads1 x --reads2 x --threads x --conda x --out_dir x` 
+`python [path to prasanco]/prasanco.py initial_assembly --label1 x --label2 x --reads1 x --reads2 x --threads x --conda x --out_dir x` 
 
 #### Options 
 Option    | Description
