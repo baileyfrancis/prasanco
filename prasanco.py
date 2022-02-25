@@ -42,8 +42,8 @@ MSA_parser.add_argument.add_argument('--conda', metavar="path to your conda /env
 
 #Create PrAsAnCo final_assembly command
 FinalAssembly_parser = subparsers.add_parser('final_assembly', help='Finish the Trycycler assemblies for both of your samples and polish them.')
-FinalAssembly_parser.add_argument('--label1', metavar='Label for your first sample', type=str, help='Please proved the same label for your first sample as you used in Steps 1, 2 and 3', required=True)
-FinalAssembly_parser.add_argument('--label2', metavar='Label for your second sample', type=str, help='Please proved the same label for your second sample as you used in Steps 1, 2 and 3', required=True)
+FinalAssembly_parser.add_argument('--label1', metavar='Label for your first sample', type=str, help='Please provide the same label for your first sample as you used in Steps 1, 2 and 3', required=True)
+FinalAssembly_parser.add_argument('--label2', metavar='Label for your second sample', type=str, help='Please provide the same label for your second sample as you used in Steps 1, 2 and 3', required=True)
 FinalAssembly_parser.add_argument('--long1', metavar='Long reads for your first sample', type=str, help='Please provide the path to your filtered long reads for your first sample produced in Step 1. These should be named [label1]_reads.fastq', required=True)
 FinalAssembly_parser.add_argument('--long1', metavar='Long reads for your second sample', type=str, help='Please provide the path to your filtered long reads for your second sample produced in Step 1. These should be named [label2]_reads.fastq', required=True)
 FinalAssembly_parser.add_argument('--short1_R1', metavar='R1 short reads for your first sample', type=str, help='A single file containing your R1 Illumina short-reads for your first sample', required=True)
@@ -60,6 +60,8 @@ FinalAssembly_parser.add_argument('--conda', metavar="path to your conda /envs d
 QC_parser = subparsers.add_parser('QC', help='Perform QC on your final assemblies for your two samples')
 QC_parser.add_argument('--label1', metavar='Label for your first sample', type=str, help='This label will be applied to all files relating to your first sample', required=True)
 QC_parser.add_argument('--label2', metavar='Label for your second sample', type=str, help='This label will be applied to all files relating to your second sample', required=True)
+QC_parser.add_argument('--assembly1' metavar='Final assembly for your first sample', type=str, help='Please provide the path to your final PrAsAnCo assembly for your first sample. This should be named [label1]_final_assembly.fasta', required=True)
+QC_parser.add_argument('--assembly2' metavar='Final assembly for your second sample', type=str, help='Please provide the path to your final PrAsAnCo assembly for your second sample. This should be named [label2]_final_assembly.fasta', required=True)
 QC_parser.add_argument('--reference', metavar='Reference assembly for your sample', type=str, help='Please provide a reference assembly for your samples', required=True)
 QC_parser.add_argument('--prasanco_dir', metavar='Path to your PrAsAnCo output directory', type=str, help='Please provide the path to your PrAsAnCo output directory', required=True)
 QC_parser.add_argument('--conda', metavar="path to your conda /envs directory", type=str, help='Please provide the absolute path to your conda /envs directory e.g. /shared/home/mbxbf2/miniconda3/envs')
@@ -329,12 +331,12 @@ if args.command == 'QC':
 		f'#SBATCH --error={args.prasanco_dir}BatchScripts/OutErr/%x.err\n\n' +
 		'source $HOME/.bash_profile\n' +
 		f'conda activate {args.conda}prasanco_py2\n\n' +
-		f'quast -o {args.prasanco_dir}QC/{args.label1}_QUAST -r {args.reference} --glimmer {args.prasanco_dir}{args.label1}_final_assembly.fasta\n' +
-		f'quast -o {args.prasanco_dir}QC/{args.label2}_QUAST -r {args.reference} --glimmer {args.prasanco_dir}{args.label2}_final_assembly.fasta\n\n' +
+		f'quast -o {args.prasanco_dir}QC/{args.label1}_QUAST -r {args.reference} --glimmer {args.assembly1}\n' +
+		f'quast -o {args.prasanco_dir}QC/{args.label2}_QUAST -r {args.reference} --glimmer {args.assembly2}\n\n' +
 		'conda deactivate\n' +
 		f'conda activate {args.conda}prasanco_py3' +
-		f'busco -m genome -i {args.prasanco_dir}{args.label1}_final_assembly.fasta -o {args.prasanco_dir}QC/{args.label1}_BUSCO --auto-lineage-prok --out-path {args.prasanco_dir}QC --update-data\n' +
-		f'busco -m genome -i {args.prasanco_dir}{args.label2}_final_assembly.fasta -o {args.prasanco_dir}QC/{args.label2}_BUSCO --auto-lineage-prok --out-path {args.prasanco_dir}QC --update-data')
+		f'busco -m genome -i {args.assembly1} -o {args.prasanco_dir}QC/{args.label1}_BUSCO --auto-lineage-prok --out-path {args.prasanco_dir}QC --update-data\n' +
+		f'busco -m genome -i {args.assembly2} -o {args.prasanco_dir}QC/{args.label2}_BUSCO --auto-lineage-prok --out-path {args.prasanco_dir}QC --update-data')
 	QC_Script.close()
 
 	os.system('sbatch QC.sh')

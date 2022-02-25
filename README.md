@@ -72,9 +72,9 @@ In short, good clusters contain many contigs that are closely related to eachoth
 After you have hand-picked your good clusters, you are ready to reconcile the contigs within them. This step of the pipeline uses the Trycycler reconile command which: checks that contigs are sufficiently similar to eachother, (if applicable) attempts to circularise them and then performs a final alignment to ensure these circular contigs are similar enough for the next step. For further details on Trycycler reconicilation, [visit this page](https://github.com/rrwick/Trycycler/wiki/Reconciling-contigs)
 
 #### Command 
-To run the PrAsAnCo reconicle step, simply navigate to your **--out_dir** from the previous step and enter the command shown below in to the command line: (options are described in further detail below)
+To run the PrAsAnCo reconicle step, simply enter the command shown below in to the command line: (options are described in further detail below)
 
-`python [path to prasanco]/prasanco.py reconcile --label1 x --label2 x --clusters1 x --clusters2 x`
+`python [path to prasanco]/prasanco.py reconcile --label1 x --label2 x --clusters1 x --clusters2 x --prasanco_dir x --conda x`
 
 #### Options 
 
@@ -84,6 +84,8 @@ Option   | Description
 --label2 |  Label for the second sample. **(Please use the same label as you did for Step 1)**
 --clusters1 | Specify the clusters from your first sample you wish to reconicle e.g. --clusters1 cluster_01 cluster_03
 --clusters2 | Specify the clusters from your second sample you wish to reconicle e.g. --clusters1 cluster_01 cluster_03
+--prasanco_dir | Please provide the path to your PrAsAnCo output directory
+--conda | Please provide the absolute path to your conda /envs directory e.g. /shared/home/mbxbf2/miniconda3/envs
 
 #### First reconcile round 
 This reconicilation stage may take multiple rounds to complete correctly and requires you to inspect the output of each round and assess whether you should keep/discard particular contigs. However, for the first round of this stage we want to try and reconcicle all clusters from all samples.
@@ -119,6 +121,8 @@ Option   | Description
 --label2 |  Label for the second sample. **(Please use the same label as you did for Step 1 and 2)**
 --clusters1 | Specify the clusters from your first sample you wish to align e.g. --clusters1 cluster_01 cluster_03
 --clusters2 | Specify the clusters from your second sample you wish to align e.g. --clusters1 cluster_01 cluster_03
+--prasanco_dir | Please provide the path to your PrAsAnCo output directory
+--conda | path to your conda /envs directory", type=str, help='Please provide the absolute path to your conda /envs directory e.g. /shared/home/mbxbf2/miniconda3/envs/
 
 #### Output 
 If everything has worked correctly, you should have a file named `3_msa.fasta` in each of your cluster directories. 
@@ -137,3 +141,91 @@ Now that we have our final Trycycler assemblies for both samples, PrAsAnco polis
 After polishing with Medaka, PrAsAnCo then performs two rounds of polishing using short-read Illumina data using both [Polypolish](https://github.com/rrwick/Polypolish) and [POLCA](https://github.com/alekseyzimin/masurca#polca). Both of these tools use the short-read data to further improve our polished long-read assembly.
 
 For further information on these polishing techniques, please [visit here](https://github.com/rrwick/Trycycler/wiki/Polishing-after-Trycycler).
+
+#### Command 
+
+To generate the final assemblies for both of your samples, simply enter the command shown below in to the command line: (options are described in further detail below)
+
+`python [path to prasanco]/prasanco.py final_assembly --label1 x --label2 x --long1 x --long2 x --short1_R1 x --short1_R2 x --short2_R1 x --short2_R2 x --clusters1 x --clusters2 x --prasanco_dir x --threads x --conda x`
+
+#### Options 
+
+Option | Description 
+-|-
+--label1 | Please provide the same label for your first sample as you used in Steps 1, 2 and 3
+--label2 | Please provide the same label for your second sample as you used in Steps 1, 2 and 3
+--long1 | Please provide the path to your filtered long reads for your first sample produced in Step 1. These should be named [label1]_reads.fastq
+--long2 | Please provide the path to your filtered long reads for your second sample produced in Step 1. These should be named [label2]_reads.fastq
+--short1_R1 | A single file containing your R1 Illumina short-reads for your first sample
+--short1_R2 | A single file containing your R2 Illumina short-reads for your first sample
+--short2_R1 | RA single file containing your R1 Illumina short-reads for your second sample
+--short2_R2 | A single file containing your R2 Illumina short-reads for your second sample
+--clusters1 | Please specify the clusters for your first sample e.g. cluster_01 cluster_02 cluster_03
+--clusters2 | Please specify the clusters for your second sample e.g. cluster_01 cluster_02 cluster_03
+--prasanco_dir | Please provide the path to your PrAsAnCo output directory
+--threads | Specify the number of threads you wish to allocate. *Recommended = 8*
+--conda | Please provide the absolute path to your conda /envs directory e.g. /shared/home/mbxbf2/miniconda3/envs
+
+#### Outputs 
+
+This command will generate numerous output files. If you want to jump straight to your final assembly you can find it in a file named `[label]_final_assembly.fasta`
+
+##### Other outputs: 
+* `*_consensus.fasta` - final Trycycler assembly (polished with Medaka)
+* `*_polypolish.fasta` - final assembly polished with Medaka + Polypolish 
+* all other outputs are intermediate files for the tools used by PrAsAnCo - for further information on these files, visit the tools page via the links above.
+
+### Step 5 - Assembly QC 
+
+PrAsAnCo can perform QC on your final assemblies, allowing you to extract useful information from them. To do so, PrAsAnCo uses both [QUAST](https://github.com/ablab/quast) and [BUSCO](https://gitlab.com/ezlab/busco). QUAST provides information such as contiguity, mismatches/indels, and N50 for each of your assemblies. BUSCO searches for genes within the reference assembly and assesses how many of these genes are present in your assembly, giving an indication on the completeness of your assembly.
+
+#### Command 
+
+To run QC on your assemblies, simply enter the command shown below in to the command-line: (options are described in further detail below)
+
+`python [path to prasanco]/prasanco.py QC --label1 x --label2 x --reference x --prasanco_dir x --conda x`
+
+#### Options 
+
+Option | Description 
+- | -
+--label1 | This label will be applied to all files relating to your first sample
+--label2 | This label will be applied to all files relating to your second sample
+--reference | Please provide a reference assembly for your samples
+--prasanco_dir | Please provide the path to your PrAsAnCo output directory
+--conda | Please provide the absolute path to your conda /envs directory e.g. /shared/home/mbxbf2/miniconda3/envs
+
+#### Output 
+
+All QC for your assemblies can be found in your `prasanco_dir` in a directory called `QC`. This directory has subfolders relating to each of the QC tools. Outputs for each of the tools can be found in these folders. For further information on these outputs, please refer to the tools page via the links above. 
+
+### Step 6 - Annotation 
+
+Once you have QC'd your assemblies, you can begin to annotate them. PrAsAnCo uses [PROKKA](https://github.com/tseemann/prokka) to annotate your genomes. For further details on PROKKA, please use the link above.
+
+#### Command 
+
+To annotate your genomes, simply enter the command shown below in to your command-line
+
+`python [path to prasanco]/prasanco.py annotate --label1 x --label2 x --assembly1 x --assembly2 x --reference x --kingdom x --genus x --species x --prasanco_dir x --conda x`
+
+#### Options 
+
+Option | Description 
+-|- 
+--label1 | Please provide a label for your first sample. This name will be added to all output files relating to your first sample
+--label2 | Please provide a label for your second sample. This name will be added to all output files relating to your second sample
+--assembly1 | Please provide the path to your final PrAsAnCo assembly for your first sample. This should be named `[label1]_final_assembly.fasta`
+--assembly2 | Please provide the path to your final PrAsAnCo assembly for your second sample. This should be named `[label2]_final_assembly.fasta`
+--reference | Please provide a reference assembly for your samples
+--kingdom | Please provide the kingdom name for your samples e.g. Archaea
+--genus | Please provide the genus name for your samples e.g. Haloferax
+--species | Please provide the species name for your samples e.g. volcanii
+--prasanco_dir | Please provide the path to your PrAsAnCo output directory
+--conda | Please provide the absolute path to your conda /envs directory e.g. /shared/home/mbxbf2/miniconda3/envs
+
+#### Outputs 
+
+PROKKA outputs for your assemblies can be found in a directory `[label]_PROKKA` in your `prasanco_dir`. For further information on PROKKA outputs, please visit the link above. 
+
+
