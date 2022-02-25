@@ -53,6 +53,7 @@ Option    | Description
 When the `initial_assembly` command is run it will create a new output directory within the current working directory (This new directory will have the name assigned to it by the `--out_dir` option. 
 
 Inside this directory you will find various ouputs: 
+
 * **BatchScripts/** directory = directory containing all scripts PrAsAnCo uses to run. If you wish to look at the SLURM outputs for these scripts, they can be found in BatchScripts/OutErr
 * **[label1]_reads.fastq** = reads for your first sample after filtering by Filtlong
 * **[label2]_reads.fastq** = reads for your second sample after filtering by Filtlong
@@ -68,7 +69,7 @@ At this stage, you need to have a look at your clusters of contigs and assess ho
 
 In short, good clusters contain many contigs that are closely related to eachother, wheras a bad cluster contains few contigs. For full instructions on selecting good contigs see [this page](https://github.com/rrwick/Trycycler/wiki/Clustering-contigs) (under the 'Choose your clusters heading) . If you have any bad clusters, please rename the directory (with the mv command) e.g. `cluster_02` will become `bad_cluster_02`. Again, for further details [refer here](https://github.com/baileyfrancis/prasanco/edit/main/README.md).
 
-#### ***Once you have done this, please move on to Step 2***
+***Once you have done this, please move on to Step 2***
 
 ### Step 2 - Reconciliate clusters 
 After you have hand-picked your good clusters, you are ready to reconcile the contigs within them. This step of the pipeline uses the Trycycler reconile command which: 
