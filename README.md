@@ -24,7 +24,7 @@ conda env create --name prasanco_py3 --file ./conda/prasanco_py3.yml
 conda env create --name prasanco_py2 --file ./conda/prasanco_py2.yml
 ```
 
-Due to PrAsAnCo using two different Conda environments, please ensure you provide PrAsAnCo with the path to your conda envs/ directory using `prasanco --conda [path]`. This allows PrAsAnCo to activate each of its Conda environments when they are needed. 
+Due to PrAsAnCo using two different Conda environments, please ensure you provide PrAsAnCo with the path to your conda envs/ directory using `prasanco --conda [path]`. This allows PrAsAnCo to activate each of its Conda environments when they are needed. You can find this path by typing `conda env list` in to the command line. 
 
 ## Usage 
 
@@ -34,7 +34,9 @@ To assemble your long-read data, PrAsAnCo uses [Trycycler](https://github.com/rr
 #### Command
 To run the initial assembly step please use the command shown here: (options are described in further detail below)
 
-`python [path to prasanco]/prasanco.py initial_assembly --label1 x --label2 x --reads1 x --reads2 x --threads x --conda x --out_dir x` 
+For Samples A and B:
+
+`python [path to prasanco]/prasanco.py initial_assembly --label1 SampleA --label2 SampleB --reads1 LongReads_SampleA.fastq --reads2 LongReads_SampleB.fastq --threads 8 --conda /shared/home/mbxbf2/miniconda3/envs/ --out_dir prasanco_SA_SB` 
 
 #### Options 
 Option    | Description
@@ -66,10 +68,15 @@ At this stage, you need to have a look at your clusters of contigs and assess ho
 
 In short, good clusters contain many contigs that are closely related to eachother, wheras a bad cluster contains few contigs. For full instructions on selecting good contigs see [this page](https://github.com/rrwick/Trycycler/wiki/Clustering-contigs) (under the 'Choose your clusters heading) . If you have any bad clusters, please rename the directory (with the mv command) e.g. `cluster_02` will become `bad_cluster_02`. Again, for further details [refer here](https://github.com/baileyfrancis/prasanco/edit/main/README.md).
 
-***Once you have done this, please move on to Step 2***
+#### ***Once you have done this, please move on to Step 2***
 
 ### Step 2 - Reconciliate clusters 
-After you have hand-picked your good clusters, you are ready to reconcile the contigs within them. This step of the pipeline uses the Trycycler reconile command which: checks that contigs are sufficiently similar to eachother, (if applicable) attempts to circularise them and then performs a final alignment to ensure these circular contigs are similar enough for the next step. For further details on Trycycler reconicilation, [visit this page](https://github.com/rrwick/Trycycler/wiki/Reconciling-contigs)
+After you have hand-picked your good clusters, you are ready to reconcile the contigs within them. This step of the pipeline uses the Trycycler reconile command which: 
+* checks that contigs are sufficiently similar to eachother 
+* (if applicable) attempts to circularise them  
+* performs a final alignment to ensure these circular contigs are similar enough for the next step. 
+* 
+* For further details on Trycycler reconicilation, [visit this page](https://github.com/rrwick/Trycycler/wiki/Reconciling-contigs)
 
 #### Command 
 To run the PrAsAnCo reconicle step, simply enter the command shown below in to the command line: (options are described in further detail below)
